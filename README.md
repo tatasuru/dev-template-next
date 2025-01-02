@@ -8,18 +8,20 @@ REF: [NestJS（Fastify） × TypeORM × PostgreSQL × Docker で環境構築](ht
 
 you can run below command for starting project.
 
+## setup
+
+create container for frontend, backend, db, db-gui
+
+```sh
+docker compose up -d --build
+```
+
 ## For frontend
 
 move to frontend directory
 
 ```sh
 cd frontend
-```
-
-docker build
-
-```sh
-docker compose up -d
 ```
 
 docker bash
@@ -48,12 +50,6 @@ move to frontend directory
 cd backend
 ```
 
-docker build
-
-```sh
-docker compose up -d
-```
-
 docker bash
 
 ```sh
@@ -71,3 +67,7 @@ down bash container
 ```sh
 exit
 ```
+
+## For DB GUI
+
+access to [http:localhost:8080](http:localhost:8080) and you will see admin dashboard
