@@ -1,0 +1,27 @@
+services:
+  # Backend service
+  backend:
+    container_name: "backend-container"
+    build: ./backend
+    ports:
+      - 8000:8000
+    volumes:
+      - ./backend:/app
+    environment:
+      DB_HOST: db
+      DB_USER: user
+      DB_PASSWORD: userpassword
+      DB_NAME: sampledb
+
+  # Frontend service
+  frontend:
+    container_name: "frontend-container"
+    build: ./frontend
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/app
+
+  # Database service
+  # db:
+  #   container_name: "db-container"
