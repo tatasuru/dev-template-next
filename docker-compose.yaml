@@ -1,18 +1,4 @@
 services:
-  # Backend service
-  backend:
-    container_name: "backend-container"
-    build: ./backend
-    ports:
-      - 8000:8000
-    volumes:
-      - ./backend:/app
-    environment:
-      DB_HOST: db
-      DB_USER: user
-      DB_PASSWORD: userpassword
-      DB_NAME: sampledb
-
   # Frontend service
   frontend:
     container_name: "frontend-container"
@@ -22,6 +8,50 @@ services:
     volumes:
       - ./frontend:/app
 
+  # Backend service
+  backend:
+    container_name: "backend-container"
+    build: ./backend
+    ports:
+      - 8000:8000
+    volumes:
+      - ./backend:/app
+    environment:
+      TZ: Asia/Tokyo
+
   # Database service
-  # db:
-  #   container_name: "db-container"
+  db:
+    container_name: db-container
+    image: postgres:16
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      TZ: "Asia/Tokyo"
+    ports:
+      - "5433:5432"
+
+  # Database GUI service
+  db-gui:
+    container_name: db-gui-container
+    image: dpage/pgadmin4:8.4
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+      - ./config/servers.json:/pgadmin4/servers.json
+    depends_on:
+      - db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    ports:
+      - "8080:80"
+
+# Volumes
+volumes:
+  postgres_data:
+  pgadmin-data:

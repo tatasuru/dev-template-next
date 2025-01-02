@@ -1,0 +1,15 @@
+# Version stuff
+.git
+.gitignore
+
+# Node stuff
+node_modules
+npm-debug.log
+
+# Build stuff
+dist
+build
+
+# env stuff
+*.env
+*.pem
