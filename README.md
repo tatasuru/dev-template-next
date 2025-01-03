@@ -71,3 +71,11 @@ exit
 ## For DB GUI
 
 access to [http:localhost:8080](http:localhost:8080) and you will see admin dashboard
+
+### TIPS
+
+If you are having trouble building an environment, please do the following...
+
+```sh
+docker system prune -a
+```
