@@ -10,37 +10,6 @@ interface Todo {
   body: string;
 }
 
-const todoData: Todo[] = [
-  {
-    id: "1",
-    body: "やること",
-  },
-  {
-    id: "2",
-    body: "やること",
-  },
-  {
-    id: "3",
-    body: "やること",
-  },
-  {
-    id: "4",
-    body: "やること",
-  },
-  {
-    id: "5",
-    body: "やること",
-  },
-  {
-    id: "6",
-    body: "やること",
-  },
-  {
-    id: "7",
-    body: "やること",
-  },
-];
-
 async function getTodos() {
   try {
     const response = await fetch("http://localhost:8000/items", {
@@ -60,7 +29,7 @@ async function getTodos() {
     return data;
   } catch (error) {
     console.error("Failed to fetch todos:", error);
-    return todoData;
+    return [];
   }
 }
 
@@ -165,16 +134,15 @@ export default function Home() {
             登録
           </Button>
         </div>
-        <div>
-          {todos.length === 0 && (
-            <div>
-              <p className="text-sm">やることがありません</p>
-            </div>
-          )}
-          {todos.length > 0 && (
-            <TodoTable todos={todos} onButtonClick={handleDeleteButtonClick} />
-          )}
-        </div>
+
+        {todos.length === 0 && (
+          <div>
+            <p className="text-sm">やることがありません</p>
+          </div>
+        )}
+        {todos.length > 0 && (
+          <TodoTable todos={todos} onButtonClick={handleDeleteButtonClick} />
+        )}
       </div>
     </div>
   );
