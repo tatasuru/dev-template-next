@@ -15,31 +15,6 @@ pnpm start:dev
 
 - pgAdmin
 
-## how to create entity
+## how to create api
 
-creating user entity example.
-
-### 1.create users folder and resource
-
-```sh
-nest g res users --no-spec
-```
-
-```sh
-? What transport layer do you use? REST API
-? Would you like to generate CRUD entry points? Yes
-```
-
-### 2.create SQL migration file
-
-```sh
-npx typeorm-ts-node-commonjs migration:generate -d src/database/database-source.ts --pretty src/database/migrations/CreateUser
-```
-
-### 3.Execute SQL migration
-
-create table in pgAdmin.
-
-```sh
-npx typeornpx typeorm-ts-node-commonjs migration:run -d src/database/database-source.ts
-```
+REF: [NestJS(+ React.js)で簡単なTODOアプリを作ってみる](https://zenn.dev/red_frasco/articles/d5b7ec71ceacf6)
