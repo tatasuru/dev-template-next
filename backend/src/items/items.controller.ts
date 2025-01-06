@@ -18,18 +18,20 @@ export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
 
   @Get()
-  findAll(): Item[] {
-    return this.itemsService.findAll();
+  async findAll(): Promise<Item[]> {
+    return await this.itemsService.findAll();
   }
 
   @Post()
-  create(@Body() createItem: CreateItemDto): Item {
-    return this.itemsService.create(createItem);
+  async create(@Body() createItem: CreateItemDto): Promise<Item> {
+    return await this.itemsService.create(createItem);
   }
 
   @Delete(':id')
-  delete(@Param('id', ParseUUIDPipe) id: string): { message: string } {
-    const result = this.itemsService.delete(id);
+  async delete(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<{ message: string }> {
+    const result = await this.itemsService.delete(id);
     return { message: result };
   }
 }
