@@ -37,7 +37,7 @@ services:
   # Database GUI service
   db-gui:
     container_name: db-gui-container
-    image: dpage/pgadmin4:8.4
+    image: dpage/pgadmin4:8.14
     volumes:
       - pgadmin-data:/var/lib/pgadmin
       - ./config/servers.json:/pgadmin4/servers.json
