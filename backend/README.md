@@ -333,8 +333,12 @@ npx typeorm-ts-node-commonjs migration:generate -d src/database/database-source.
 npx typeorm-ts-node-commonjs migration:run -d src/database/database-source.ts
 ```
 
-```sh
-npx typeorm-ts-node-commonjs schema:drop -d src/database/database-source.ts
-```
-
 Now, you can see user table in pgAdmin.
+
+> [!TIP]
+>
+> When it doesn't work, execute below command and rebuild docker container.
+>
+> ```sh
+>  npx typeorm-ts-node-commonjs schema:drop -d src/database/database-source.ts
+> ```
