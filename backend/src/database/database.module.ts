@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
+import { join } from 'path';
 
-export const ENTITIES_DIR = 'dist/**/*.entity.js';
-export const MIGRATION_FILES_DIR = 'dist/database/migrations/*.js';
+export const ENTITIES_DIR = join(__dirname, '..', '**', '*.entity.{ts,js}');
+export const MIGRATION_FILES_DIR = join(__dirname, 'migrations', '*.{ts,js}');
 
 @Module({
   imports: [

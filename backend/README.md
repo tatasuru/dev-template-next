@@ -326,11 +326,14 @@ we will create migration file using NestJS command in migrations folder later.
 #### ② execute command
 
 ```sh
-npx typeorm-ts-node-commonjs migration:generate -d src/database/database-source.ts --pretty src/database/migrations/CreateTables
+pnpm migration:generate
 ```
 
+then, you can see src/database/migrations/CreateTables.
+After that, execute below command.
+
 ```sh
-npx typeorm-ts-node-commonjs migration:run -d src/database/database-source.ts
+pnpm migration:run
 ```
 
 Now, you can see user table in pgAdmin.
@@ -340,5 +343,5 @@ Now, you can see user table in pgAdmin.
 > When it doesn't work, execute below command and rebuild docker container.
 >
 > ```sh
->  npx typeorm-ts-node-commonjs schema:drop -d src/database/database-source.ts
+>  pnpm migration:drop
 > ```
