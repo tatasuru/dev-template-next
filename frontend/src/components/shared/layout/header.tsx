@@ -12,8 +12,8 @@ export function Header() {
   const currentPath = usePathname();
 
   return (
-    <div className="bg-main p-4">
-      <div className="flex items-center justify-between">
+    <div className="bg-main p-4 w-full fixed top-0 left-0 right-0 z-50 min-h-[76px] flex items-center">
+      <div className="flex items-center justify-between w-full h-full">
         {/* left */}
         <div>
           {currentPath === "/" && (
@@ -23,7 +23,7 @@ export function Header() {
             </div>
           )}
 
-          {currentPath !== "/" && (
+          {currentPath === "/" && (
             <Button
               variant="main"
               size="icon"
@@ -34,7 +34,7 @@ export function Header() {
             </Button>
           )}
 
-          {currentPath !== "/" && (
+          {currentPath === "" && (
             <Button
               variant="main"
               size="icon"
@@ -47,13 +47,13 @@ export function Header() {
         </div>
 
         {/* center */}
-        {currentPath !== "/" && (
-          <h1 className="text-lg font-bold text-white">texttexttext</h1>
+        {currentPath === "/setup" && (
+          <h1 className="text-lg font-bold text-white">SETUP</h1>
         )}
 
         {/* right */}
         <div>
-          {currentPath !== "/" && (
+          {currentPath === "/menu" && (
             <Button
               variant="main"
               size="icon"
