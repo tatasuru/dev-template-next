@@ -9,8 +9,8 @@ import { UserGender } from './user-gender.enum';
 
 @Entity()
 export class Users {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column({ type: 'text' })
   name: string;

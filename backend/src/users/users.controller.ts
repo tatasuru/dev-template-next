@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   ParseUUIDPipe,
+  ParseIntPipe,
   Post,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -36,6 +37,21 @@ export class UsersController {
   })
   async findAll(): Promise<User[]> {
     return await this.UsersService.findAll();
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: '指定されたIDのuser情報を取得' })
+  @ApiResponse({
+    status: 200,
+    description: 'user情報取得成功',
+    type: UserResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'user情報が見つかりません',
+  })
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<User> {
+    return await this.UsersService.findOne(id);
   }
 
   @Post()

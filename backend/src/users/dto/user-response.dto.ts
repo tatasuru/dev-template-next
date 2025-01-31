@@ -4,10 +4,10 @@ import { UserGender } from '../user-gender.enum';
 
 export class UserResponseDto {
   @ApiProperty({
-    example: '1',
+    example: 1,
     description: 'ユーザーID',
   })
-  id: string;
+  id: number;
 
   @ApiProperty({
     example: 'user name',
