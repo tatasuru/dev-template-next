@@ -10,14 +10,24 @@ import {
 } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { Item } from './items.model';
+import { ItemResponseDto } from './dto/item-response.dto';
 import { ItemStatus } from './item-status.enum';
-import { CreateItemDto } from './dto/create-item';
+import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
+import { CreateItemDto } from './dto/create-item.dto';
 
+@ApiTags('items')
 @Controller('items')
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
 
   @Get()
+  @ApiOperation({ summary: 'TODOリスト取得' })
+  @ApiResponse({
+    status: 200,
+    description: 'TODOリスト取得',
+    type: ItemResponseDto,
+    isArray: true,
+  })
   async findAll(): Promise<Item[]> {
     return await this.itemsService.findAll();
   }

@@ -23,6 +23,7 @@
     "migration:drop": "npx typeorm-ts-node-commonjs schema:drop -d src/database/database-source.ts"
   },
   "dependencies": {
+    "@fastify/static": "^7.0.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.3.0",
     "@nestjs/core": "^10.0.0",
@@ -41,6 +42,7 @@
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
+    "@nestjs/swagger": "^11.0.3",
     "@nestjs/testing": "^10.0.0",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.2",
