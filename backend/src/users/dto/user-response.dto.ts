@@ -2,7 +2,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserGender } from '../user-gender.enum';
 
-export class ItemResponseDto {
+export class UserResponseDto {
   @ApiProperty({
     example: '1',
     description: 'ユーザーID',
@@ -16,6 +16,12 @@ export class ItemResponseDto {
   name: string;
 
   @ApiProperty({
+    example: '000-0000-0000',
+    description: 'ユーザーの電話番号',
+  })
+  phone_number: string;
+
+  @ApiProperty({
     enum: UserGender,
     example: UserGender.MALE,
     description: 'ユーザーの性別',
@@ -23,10 +29,10 @@ export class ItemResponseDto {
   gender: UserGender;
 
   @ApiProperty({
-    example: 'user phone number',
-    description: 'ユーザーの電話番号',
+    example: '1990-01-01',
+    description: 'ユーザーの生年月日',
   })
-  phone_number: string;
+  birth_date: string;
 
   @ApiProperty()
   createdAt: Date;

@@ -16,4 +16,23 @@ export class UsersService {
   async findAll(): Promise<User[]> {
     return await this.itemRepository.find();
   }
+
+  async create(user: {
+    name: string;
+    phone_number: string;
+    gender: UserGender;
+    birth_date: string;
+  }): Promise<User> {
+    const item = this.itemRepository.create({
+      id: uuid(),
+      name: user.name,
+      phone_number: user.phone_number,
+      gender: user.gender,
+      birth_date: user.birth_date,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+
+    return await this.itemRepository.save(item);
+  }
 }
