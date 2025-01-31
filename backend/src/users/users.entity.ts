@@ -5,22 +5,28 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ItemStatus } from './item-status.enum';
+import { UserGender } from './user-gender.enum';
 
 @Entity()
-export class Items {
+export class Users {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ type: 'text' })
-  body: string;
+  name: string;
+
+  @Column({ type: 'text' })
+  phone_number: string;
 
   @Column({
     type: 'enum',
-    enum: ItemStatus,
-    default: ItemStatus.IN_PROGRESS,
+    enum: UserGender,
+    default: UserGender.MALE,
   })
-  status: ItemStatus;
+  gender: UserGender;
+
+  @Column({ type: 'text' })
+  birth_date: string;
 
   @CreateDateColumn()
   createdAt: Date;
