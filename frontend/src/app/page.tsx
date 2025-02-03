@@ -1,18 +1,26 @@
 import { Title } from "@/components/shared/title";
 import { Icon } from "@/components/shared/icon";
+import { ItemCard } from "@/components/shared/itemCard";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "@/components/shadcn-ui/carousel";
 import Image from "next/image";
+import type { Route } from "next";
+import type { StaticImageData } from "next/image";
 import Banner from "../../public/banner.png";
+import Sandwich from "../../public/sandwich.png";
 import SandwichIcon from "../../public/sandwich-icon.png";
 import SideMenuIcon from "../../public/sidemenu-icon.png";
 import DrinkIcon from "../../public/drink-icon.png";
 import OtherIcon from "../../public/other-icon.png";
 
-const categories = [
+const categories: {
+  icon: StaticImageData;
+  text: string;
+  href: Route;
+}[] = [
   {
     icon: SandwichIcon,
     text: "サンドイッチ",
@@ -35,9 +43,58 @@ const categories = [
   },
 ];
 
+const items: {
+  image: StaticImageData;
+  badge: string;
+  name: string;
+  description: string;
+  price: number;
+  calorie: number;
+  time: number;
+  href: Route;
+  size: "small" | "large";
+}[] = [
+  {
+    image: Sandwich,
+    badge: "New",
+    name: "クラブサンドウィッチ",
+    description:
+      "ここに説明が入るここに説明が入るここに説明が入るここに説明が入る",
+    price: 1500,
+    calorie: 1500,
+    time: 20,
+    href: "/menu",
+    size: "small",
+  },
+  {
+    image: Sandwich,
+    badge: "New",
+    name: "クラブサンドウィッチ",
+    description:
+      "ここに説明が入るここに説明が入るここに説明が入るここに説明が入る",
+    price: 1500,
+    calorie: 1500,
+    time: 20,
+    href: "/menu",
+    size: "small",
+  },
+  {
+    image: Sandwich,
+    badge: "New",
+    name: "クラブサンドウィッチ",
+    description:
+      "ここに説明が入るここに説明が入るここに説明が入るここに説明が入る",
+    price: 1500,
+    calorie: 1500,
+    time: 20,
+    href: "/menu",
+    size: "small",
+  },
+];
+
 export default function Home() {
   return (
-    <div className="px-4 py-8 min-h-full h-fit grid gap-8">
+    <div className="px-4 py-8 min-h-full h-fit grid gap-10">
       <div className="grid gap-5">
         <Title title="クーポン" href="/coupon" label="詳細へ" />
         <Carousel
@@ -71,6 +128,25 @@ export default function Home() {
               iconImage={category.icon}
               text={category.text}
               href={category.href}
+            />
+          ))}
+        </div>
+      </div>
+      <div className="grid gap-5">
+        <Title title="おすすめメニュー" href="/menu" label="メニューへ" />
+        <div className="flex flex-col gap-3">
+          {items.map((item, index) => (
+            <ItemCard
+              key={index}
+              image={item.image}
+              badge={item.badge}
+              name={item.name}
+              description={item.description}
+              price={item.price}
+              calorie={item.calorie}
+              time={item.time}
+              href={item.href}
+              size={item.size}
             />
           ))}
         </div>
