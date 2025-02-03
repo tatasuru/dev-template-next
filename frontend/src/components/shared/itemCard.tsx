@@ -49,7 +49,7 @@ function MetricDisplay({ icon: Icon, value }: MetricItem) {
   return (
     <div className="flex items-center gap-px">
       <Icon className="w-4 h-4 text-sub" />
-      <span className="text-xs font-bold">{value}</span>
+      <span className="text-xs font-medium">{value}</span>
     </div>
   );
 }
@@ -92,7 +92,9 @@ export function ItemCard({
         <div className="flex flex-col justify-between w-full">
           <CardContent className={styles.content}>
             <h3 className="text-sm font-bold max-w-40 line-clamp-1">{name}</h3>
-            <p className="text-xs font-medium line-clamp-2">{description}</p>
+            <p className="text-xs font-medium line-clamp-2 text-muted-foreground">
+              {description}
+            </p>
           </CardContent>
           <CardFooter className="flex gap-2 p-3 pt-0">
             {metrics.map((metric, index) => (

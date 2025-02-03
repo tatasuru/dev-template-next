@@ -1,12 +1,14 @@
 import { Title } from "@/components/shared/title";
 import { Icon } from "@/components/shared/icon";
 import { ItemCard } from "@/components/shared/itemCard";
+import { Button } from "@/components/shadcn-ui/button";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "@/components/shadcn-ui/carousel";
 import Image from "next/image";
+import Link from "next/link";
 import type { Route } from "next";
 import type { StaticImageData } from "next/image";
 import Banner from "../../public/banner.png";
@@ -101,7 +103,7 @@ export default function Home() {
           opts={{
             align: "start",
           }}
-          className="w-full max-w-sm"
+          className="w-full"
         >
           <CarouselContent>
             {Array.from({ length: 3 }).map((_, index) => (
@@ -150,6 +152,9 @@ export default function Home() {
             />
           ))}
         </div>
+        <Button size="default" variant="main" className="w-full py-2" asChild>
+          <Link href="/menu">すべてのメニューを見る</Link>
+        </Button>
       </div>
     </div>
   );
