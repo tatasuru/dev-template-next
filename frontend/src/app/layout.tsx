@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/shared/layout/header";
+import { Toaster } from "@/components/shadcn-ui/toaster";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +33,7 @@ export default function RootLayout({
           <div className="max-w-[550px] w-full h-fit">
             <Header />
             <div className="pt-[76px] min-h-screen w-full">{children}</div>
+            <Toaster />
           </div>
         </div>
       </body>

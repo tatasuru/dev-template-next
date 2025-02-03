@@ -23,7 +23,7 @@ export function Header() {
             </div>
           )}
 
-          {currentPath === "/" && (
+          {currentPath !== "/" && currentPath !== "/setup" && (
             <Button
               variant="main"
               size="icon"

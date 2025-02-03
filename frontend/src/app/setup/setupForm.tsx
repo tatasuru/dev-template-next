@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -12,6 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/shadcn-ui/form";
+import { useToast } from "@/hooks/use-toast";
 import {
   Popover,
   PopoverContent,
@@ -22,6 +24,8 @@ import { format } from "date-fns";
 import { cn } from "@/utils/shadcn";
 import { Calendar } from "@/components/shadcn-ui/calendar";
 import { Calendar as CalendarIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import LoadingIcon from "~icons/line-md/loading-twotone-loop";
 
 const formSchema = z.object({
   name: z
@@ -39,6 +43,10 @@ const formSchema = z.object({
 });
 
 export function SetupForm() {
+  const router = useRouter();
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -51,10 +59,28 @@ export function SetupForm() {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    registerUserInfo(values);
+
+    setIsSubmitting(true);
+
+    await registerUserInfo(values);
+
+    // Show a success toast.
+    setTimeout(() => {
+      toast({
+        variant: "success",
+        title: "登録完了",
+        description: "HOMEへリダイレクトします。",
+      });
+    }, 2000);
+
+    // Redirect to the next page
+    setTimeout(() => {
+      router.push("/");
+      setIsSubmitting(false);
+    }, 4000);
   }
 
   async function registerUserInfo(body: z.infer<typeof formSchema>) {
@@ -190,8 +216,10 @@ export function SetupForm() {
           type="submit"
           variant="main"
           className="w-full py-2"
+          disabled={isSubmitting}
         >
-          登録する
+          {!isSubmitting && "登録する"}
+          {isSubmitting && <LoadingIcon className="!size-6 animate-spin" />}
         </Button>
       </form>
     </Form>

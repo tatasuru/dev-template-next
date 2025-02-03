@@ -49,6 +49,10 @@ export default {
           DEFAULT: "hsl(var(--sub))",
           foreground: "hsl(var(--sub-foreground))",
         },
+        tertiary: {
+          DEFAULT: "hsl(var(--tertiary))",
+          foreground: "hsl(var(--tertiary-foreground))",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

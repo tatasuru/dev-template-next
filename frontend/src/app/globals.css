@@ -37,6 +37,8 @@ body {
     --main-foreground: 0 0% 9%;
     --sub: 111, 50%, 32%;
     --sub-foreground: 0 0% 9%;
+    --tertiary: 44 100% 87%;
+    --tertiary-foreground: 0 0% 9%;
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -67,6 +69,8 @@ body {
     --main-foreground: 0 0% 98%;
     --sub: 111, 50%, 24%;
     --sub-foreground: 0 0% 98%;
+    --tertiary: 44 100% 87%;
+    --tertiary-foreground: 0 0% 98%;
   }
 }
 
