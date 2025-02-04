@@ -74,10 +74,10 @@ export function ItemCard({
   ];
 
   return (
-    <Card>
+    <Card className="shadow-none">
       <Link className={styles.container} href={href}>
         {badge && (
-          <Badge className="absolute right-3 top-2 bg-sub text-white rounded-full">
+          <Badge className="absolute right-3 top-2 bg-sub text-white rounded-full z-10 shadow-none">
             {badge}
           </Badge>
         )}

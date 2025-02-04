@@ -1,6 +1,8 @@
+import * as React from "react";
 import { Title } from "@/components/shared/title";
 import { Icon } from "@/components/shared/icon";
 import { ItemCard } from "@/components/shared/itemCard";
+import { BusinessDayCalendar } from "@/components/home/businessDayCalendar";
 import { Button } from "@/components/shadcn-ui/button";
 import {
   Carousel,
@@ -155,6 +157,13 @@ export default function Home() {
         <Button size="default" variant="main" className="w-full py-2" asChild>
           <Link href="/menu">すべてのメニューを見る</Link>
         </Button>
+      </div>
+      <div className="grid gap-5">
+        <Title title="営業日" />
+        <BusinessDayCalendar />
+      </div>
+      <div className="grid gap-5">
+        <Title title="アクセス" />
       </div>
     </div>
   );
