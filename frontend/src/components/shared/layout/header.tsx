@@ -10,6 +10,7 @@ import { Button } from "@/components/shadcn-ui/button";
 export function Header() {
   const router = useRouter();
   const currentPath = usePathname();
+  const currentPathName = currentPath.split("/")[1];
 
   return (
     <div className="bg-main p-4 w-full fixed top-0 left-0 right-0 z-50 min-h-[76px] flex items-center">
@@ -47,8 +48,10 @@ export function Header() {
         </div>
 
         {/* center */}
-        {currentPath === "/setup" && (
-          <h1 className="text-lg font-bold text-white">SETUP</h1>
+        {currentPath !== "/" && (
+          <h1 className="text-lg font-bold text-white">
+            {currentPathName.toUpperCase()}
+          </h1>
         )}
 
         {/* right */}
