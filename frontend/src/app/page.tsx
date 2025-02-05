@@ -115,13 +115,13 @@ export default async function Home() {
           <CarouselContent>
             {Array.from({ length: 3 }).map((_, index) => (
               <CarouselItem key={index} className="basis-10/12">
-                <div className="p-1">
+                <div className="p-1 relative aspect-[2/1]">
                   <Image
                     src={Banner}
-                    width={500}
-                    height={500}
-                    alt="Picture of the author"
+                    alt="Banner image"
                     priority
+                    fill
+                    className="object-fit rounded-lg"
                   />
                 </div>
               </CarouselItem>
@@ -170,6 +170,16 @@ export default async function Home() {
       </div>
       <div className="grid gap-5">
         <Title title="アクセス" />
+        <div className="w-full aspect-[4/3]">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6481.335730419201!2d139.75022457589716!3d35.685179329757!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188c0d02d8064d%3A0xd11a5f0b379e6db7!2z55qH5bGF!5e0!3m2!1sja!2sjp!4v1738758155468!5m2!1sja!2sjp"
+            className="w-full h-full rounded-lg border-0"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            aria-hidden="false"
+            allowFullScreen
+          />
+        </div>
       </div>
     </div>
   );

@@ -65,7 +65,7 @@ export function Header() {
               <SearchIcon className="!size-8 text-white" />
             </Button>
           ) : (
-            <div className="size-8"></div>
+            currentPath !== "/" && <div className="size-8"></div>
           )}
           {currentPath === "/" && (
             <Button
