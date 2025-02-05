@@ -50,6 +50,7 @@ const categories: {
 const items: {
   image: StaticImageData;
   badge: string;
+  category: string;
   name: string;
   description: string;
   price: number;
@@ -61,6 +62,7 @@ const items: {
   {
     image: Sandwich,
     badge: "New",
+    category: "sandwich",
     name: "クラブサンドウィッチ",
     description:
       "ここに説明が入るここに説明が入るここに説明が入るここに説明が入る",
@@ -68,11 +70,12 @@ const items: {
     calorie: 1500,
     time: 20,
     href: "/menu",
-    size: "small",
+    size: "large",
   },
   {
     image: Sandwich,
     badge: "New",
+    category: "sandwich",
     name: "クラブサンドウィッチ",
     description:
       "ここに説明が入るここに説明が入るここに説明が入るここに説明が入る",
@@ -80,11 +83,12 @@ const items: {
     calorie: 1500,
     time: 20,
     href: "/menu",
-    size: "small",
+    size: "large",
   },
   {
     image: Sandwich,
     badge: "New",
+    category: "sandwich",
     name: "クラブサンドウィッチ",
     description:
       "ここに説明が入るここに説明が入るここに説明が入るここに説明が入る",
@@ -92,7 +96,7 @@ const items: {
     calorie: 1500,
     time: 20,
     href: "/menu",
-    size: "small",
+    size: "large",
   },
 ];
 

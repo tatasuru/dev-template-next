@@ -33,7 +33,9 @@ export default function RootLayout({
         <div className="flex items-center justify-center h-fit bg-white">
           <div className="max-w-[550px] w-full h-fit">
             <Header />
-            <div className="pt-[76px] min-h-screen w-full">{children}</div>
+            <div className="pt-[76px] min-h-screen w-full h-full">
+              {children}
+            </div>
             <Toaster />
             <Footer />
           </div>
