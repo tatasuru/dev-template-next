@@ -11,48 +11,65 @@ import {
 import type { Route } from "next";
 import { useState, useMemo } from "react";
 
-export function MenuContents({
-  items,
-}: {
-  items: {
-    image: StaticImageData;
-    badge: string;
-    category: string;
+interface Recipe {
+  id: number;
+  image_url: StaticImageData;
+  category_id: number;
+  badge: string;
+  category: {
+    id: number;
     name: string;
-    description: string;
-    price: number;
-    calorie: number;
-    time: number;
-    href: Route;
-    size: "small" | "large";
-  }[];
-}) {
-  const categories = useMemo(() => {
-    const uniqueCategories = Array.from(
-      new Set(items.map((item) => item.category))
-    ).map((category) => ({
-      name:
-        category === "sandwich"
-          ? "サンドウィッチ"
-          : category === "drink"
-          ? "ドリンク"
-          : category === "side"
-          ? "サイドメニュー"
-          : category === "other"
-          ? "その他"
-          : category,
-      value: category,
-    }));
+    display_order: number;
+    createdAt: string;
+    updatedAt: string;
+  };
+  name: string;
+  description: string;
+  base_price: number;
+  calories: number;
+  cooking_time: number;
+  href: Route;
+  size: "small" | "large";
+}
 
-    return [{ name: "全て", value: "all" }, ...uniqueCategories];
-  }, [items]);
-
+export function MenuContents({ items }: { items: Recipe[] }) {
   const [activeCategory, setActiveCategory] = useState("all");
 
+  // Get unique categories
+  const categories = useMemo(() => {
+    const uniqueCategoryNamesAndId = Array.from(
+      new Set(
+        items
+          .map((item) => item.category)
+          .map((category) => JSON.stringify(category))
+      )
+    ).map((str) => JSON.parse(str));
+
+    const categoryList = uniqueCategoryNamesAndId
+      .map((category) => ({
+        name:
+          category.name === "sandwich"
+            ? "サンドウィッチ"
+            : category.name === "drink"
+            ? "ドリンク"
+            : category.name === "side"
+            ? "サイドメニュー"
+            : category.name === "other"
+            ? "その他"
+            : category.name,
+        value: category.name,
+        id: category.id,
+      }))
+      .sort((a, b) => a.id - b.id);
+
+    return [{ name: "全て", value: "all" }, ...categoryList];
+  }, [items]);
+
+  // Filter items by category
   const filteredItems =
     activeCategory === "all"
       ? items
-      : items.filter((item) => item.category === activeCategory);
+      : items.filter((item) => item.category.name === activeCategory);
 
   return (
     <Tabs value={activeCategory} className="w-full overflow-hidden">
@@ -74,13 +91,13 @@ export function MenuContents({
         {filteredItems.map((item, index) => (
           <ItemCard
             key={index}
-            image={item.image}
+            image_url={item.image_url}
             badge={item.badge}
             name={item.name}
             description={item.description}
-            price={item.price}
-            calorie={item.calorie}
-            time={item.time}
+            price={item.base_price}
+            calorie={item.calories}
+            time={item.cooking_time}
             href={item.href}
             size={item.size}
           />

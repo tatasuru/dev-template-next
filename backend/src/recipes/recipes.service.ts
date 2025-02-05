@@ -13,7 +13,7 @@ export class RecipesService {
     private itemRepository: Repository<Recipe>,
   ) {}
 
-  async findAll(size?: number): Promise<Recipe[]> {
+  async findAll(size?: number, category_id?: number): Promise<Recipe[]> {
     const query = this.itemRepository
       .createQueryBuilder('recipe')
       .leftJoinAndSelect('recipe.category', 'category')
@@ -21,6 +21,10 @@ export class RecipesService {
 
     if (size && size > 0) {
       query.take(size);
+    }
+
+    if (category_id) {
+      query.where('recipe.category_id = :category_id', { category_id });
     }
 
     return await query.getMany();

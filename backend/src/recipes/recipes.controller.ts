@@ -49,11 +49,11 @@ export class RecipesController {
     description: '取得する件数を制限（指定がない場合は全件取得）',
   })
   async findAll(
-    @Query('category_id') category_id?: number,
     @Query('size') size?: number,
+    @Query('category_id') category_id?: number,
   ): Promise<Recipe[]> {
     try {
-      return await this.recipesService.findAll(size);
+      return await this.recipesService.findAll(size, category_id);
     } catch (error) {
       throw new HttpException(
         error.message,

@@ -14,11 +14,31 @@ import Link from "next/link";
 import type { Route } from "next";
 import type { StaticImageData } from "next/image";
 import Banner from "../../public/banner.png";
-import Sandwich from "../../public/sandwich.png";
 import SandwichIcon from "../../public/sandwich-icon.png";
 import SideMenuIcon from "../../public/sidemenu-icon.png";
 import DrinkIcon from "../../public/drink-icon.png";
 import OtherIcon from "../../public/other-icon.png";
+
+interface Recipe {
+  id: number;
+  image_url: StaticImageData;
+  category_id: number;
+  badge: string;
+  category: {
+    id: number;
+    name: string;
+    display_order: number;
+    createdAt: string;
+    updatedAt: string;
+  };
+  name: string;
+  description: string;
+  base_price: number;
+  calories: number;
+  cooking_time: number;
+  href: Route;
+  size: "small" | "large";
+}
 
 const categories: {
   icon: StaticImageData;
@@ -47,60 +67,41 @@ const categories: {
   },
 ];
 
-const items: {
-  image: StaticImageData;
-  badge: string;
-  category: string;
-  name: string;
-  description: string;
-  price: number;
-  calorie: number;
-  time: number;
-  href: Route;
-  size: "small" | "large";
-}[] = [
-  {
-    image: Sandwich,
-    badge: "New",
-    category: "sandwich",
-    name: "クラブサンドウィッチ",
-    description:
-      "ここに説明が入るここに説明が入るここに説明が入るここに説明が入る",
-    price: 1500,
-    calorie: 1500,
-    time: 20,
-    href: "/menu",
-    size: "large",
-  },
-  {
-    image: Sandwich,
-    badge: "New",
-    category: "sandwich",
-    name: "クラブサンドウィッチ",
-    description:
-      "ここに説明が入るここに説明が入るここに説明が入るここに説明が入る",
-    price: 1500,
-    calorie: 1500,
-    time: 20,
-    href: "/menu",
-    size: "large",
-  },
-  {
-    image: Sandwich,
-    badge: "New",
-    category: "sandwich",
-    name: "クラブサンドウィッチ",
-    description:
-      "ここに説明が入るここに説明が入るここに説明が入るここに説明が入る",
-    price: 1500,
-    calorie: 1500,
-    time: 20,
-    href: "/menu",
-    size: "large",
-  },
-];
+async function getRecipes() {
+  const res = await fetch(
+    "http://host.docker.internal:8000/recipes?size=3&category_id=3",
+    {
+      method: "GET",
+      cache: "no-store",
 
-export default function Home() {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch recipes: ${res.status}`);
+  }
+
+  return res.json();
+}
+
+export default async function Home() {
+  const recipes = await getRecipes();
+  const items: Recipe[] = recipes.map((recipe: Recipe) => ({
+    image_url: recipe.image_url,
+    badge: recipe.badge,
+    category: recipe.category,
+    name: recipe.name,
+    description: recipe.description,
+    base_price: recipe.base_price,
+    calories: recipe.calories,
+    cooking_time: recipe.cooking_time,
+    href: `/menu/${recipe.id}` as Route<`/menu/${string}`>,
+    size: "small" as const,
+  }));
+
   return (
     <div className="px-4 py-8 min-h-full h-fit grid gap-10">
       <div className="grid gap-5">
@@ -120,6 +121,7 @@ export default function Home() {
                     width={500}
                     height={500}
                     alt="Picture of the author"
+                    priority
                   />
                 </div>
               </CarouselItem>
@@ -146,13 +148,13 @@ export default function Home() {
           {items.map((item, index) => (
             <ItemCard
               key={index}
-              image={item.image}
+              image_url={item.image_url}
               badge={item.badge}
               name={item.name}
               description={item.description}
-              price={item.price}
-              calorie={item.calorie}
-              time={item.time}
+              price={item.base_price}
+              calorie={item.calories}
+              time={item.cooking_time}
               href={item.href}
               size={item.size}
             />

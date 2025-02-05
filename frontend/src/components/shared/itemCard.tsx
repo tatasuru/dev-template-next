@@ -14,7 +14,7 @@ import CalorieIcon from "~icons/solar/fire-bold";
 import TimeIcon from "~icons/solar/clock-circle-bold";
 
 type ItemCardProps = Readonly<{
-  image: StaticImageData;
+  image_url: StaticImageData;
   badge?: string;
   name: string;
   description: string;
@@ -55,7 +55,7 @@ function MetricDisplay({ icon: Icon, value }: MetricItem) {
 }
 
 export function ItemCard({
-  image,
+  image_url,
   badge,
   name,
   description,
@@ -68,8 +68,8 @@ export function ItemCard({
   const styles = LAYOUT_STYLES[size];
 
   const metrics: MetricItem[] = [
-    { icon: PriceIcon, value: `¥${price.toLocaleString()}〜` },
-    { icon: CalorieIcon, value: `${calorie.toLocaleString()}Kcal` },
+    { icon: PriceIcon, value: `¥${Number(price).toLocaleString()}〜` },
+    { icon: CalorieIcon, value: `${Number(calorie).toLocaleString()}Kcal` },
     { icon: TimeIcon, value: `${time}min` },
   ];
 
@@ -84,9 +84,15 @@ export function ItemCard({
         <CardHeader className={styles.header}>
           <Image
             className={styles.image}
-            src={image}
+            src={`/${image_url}`}
             alt="merchandise image"
             fill
+            priority
+            sizes={
+              size === "large"
+                ? "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                : "(max-width: 768px) 120px, 120px"
+            }
           />
         </CardHeader>
         <div className="flex flex-col justify-between w-full">
