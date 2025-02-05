@@ -56,7 +56,7 @@ export function Header() {
 
         {/* right */}
         <div>
-          {currentPath === "/menu" && (
+          {currentPath === "/menu" ? (
             <Button
               variant="main"
               size="icon"
@@ -64,6 +64,8 @@ export function Header() {
             >
               <SearchIcon className="!size-8 text-white" />
             </Button>
+          ) : (
+            <div className="size-8"></div>
           )}
           {currentPath === "/" && (
             <Button
