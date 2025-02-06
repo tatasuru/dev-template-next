@@ -2,21 +2,37 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Route } from "next";
 import type { StaticImageData } from "next/image";
+import { Button } from "@/components/shadcn-ui/button";
 
 export function Icon({
   iconImage,
   href,
   text,
+  selected,
+  onClick,
 }: Readonly<{
   iconImage: StaticImageData;
   href?: Route;
   text?: string;
+  selected?: boolean;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }>) {
   const content = (
     <>
-      <div className="rounded-full p-1 bg-tertiary size-16 flex items-center justify-center">
-        <Image src={iconImage} alt="icon" className="size-9" />
-      </div>
+      <Button
+        type="button"
+        onClick={onClick}
+        className={`rounded-full p-1 w-16 h-16 flex items-center justify-center
+          ${selected ? "bg-main" : "bg-tertiary"}
+          ${selected ? "hover:bg-main" : "hover:bg-tertiary"}
+          `}
+      >
+        <Image
+          src={iconImage}
+          alt="icon"
+          className={`size-9 ${selected ? "brightness-0 invert" : ""}`}
+        />
+      </Button>
       {text && <span className="text-xs font-bold">{text}</span>}
     </>
   );

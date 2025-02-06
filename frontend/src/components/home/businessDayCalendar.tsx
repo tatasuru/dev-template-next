@@ -19,8 +19,9 @@ export function BusinessDayCalendar() {
         table: "w-full h-full border-collapse space-y-1",
         head_row: "",
         row: "w-full mt-2",
-        cell: "w-8 h-8",
-        day: "w-8 h-8 flex items-center justify-center rounded-full",
+        cell: "w-fit h-fit text-center",
+        day: "w-full h-10 flex items-center justify-center rounded-full",
+        day_selected: "bg-main text-white",
       }}
     />
   );
