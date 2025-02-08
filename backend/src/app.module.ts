@@ -6,6 +6,7 @@ import { DatabaseModule } from './database/database.module';
 import { UsersModule } from './users/users.module';
 import { RecipesModule } from './recipes/recipes.module';
 import { CategoriesModule } from './categories/categories.module';
+import { CustomizationCategoriesModule } from './customization_categories/customization_categories.module';
 
 @Module({
   // TODO: find env variables in ../../.env
@@ -15,6 +16,7 @@ import { CategoriesModule } from './categories/categories.module';
     UsersModule,
     RecipesModule,
     CategoriesModule,
+    CustomizationCategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
