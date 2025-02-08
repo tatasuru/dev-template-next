@@ -7,8 +7,9 @@ import {
   OneToMany,
   Index,
 } from 'typeorm';
+import { CustomizationOptions } from '../customization_options/customization_options.entity';
 
-@Entity('CustomizationCategories')
+@Entity('customizationCategories')
 export class CustomizationCategories {
   @PrimaryGeneratedColumn('increment')
   readonly id: number;
@@ -35,6 +36,12 @@ export class CustomizationCategories {
     default: false,
   })
   required: boolean;
+
+  @OneToMany(
+    () => CustomizationOptions,
+    (customizationOption) => customizationOption.customization_category,
+  )
+  options: CustomizationOptions[];
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   readonly createdAt: Date;

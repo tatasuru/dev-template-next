@@ -1,6 +1,13 @@
+// dto/item-response.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CustomizationOptionCreateDto {
+export class CustomizationOptionResponseDto {
+  @ApiProperty({
+    example: 1,
+    description: 'カスタマイズオプションID',
+  })
+  id: number;
+
   @ApiProperty({
     example: 1,
     description: 'カスタマイズカテゴリーID',
@@ -9,15 +16,15 @@ export class CustomizationOptionCreateDto {
 
   @ApiProperty({
     example: 'ホワイト',
-    description: 'カスタマイズオプションの名前',
+    description: 'カスタマイズオプション名',
   })
-  name: string;
+  name: number;
 
   @ApiProperty({
     example: 'https://example.com/image.jpg',
-    description: '画像のURL',
+    description: 'icon画像URL',
   })
-  image_url: string;
+  image_url: number;
 
   @ApiProperty({
     example: 100,
@@ -30,4 +37,10 @@ export class CustomizationOptionCreateDto {
     description: '表示順',
   })
   display_order: number;
+
+  @ApiProperty()
+  createdAt: Date;
+
+  @ApiProperty()
+  updatedAt: Date;
 }

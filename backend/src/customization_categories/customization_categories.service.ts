@@ -11,13 +11,23 @@ export class CustomizationCategoriesService {
     private itemRepository: Repository<CustomizationCategory>,
   ) {}
 
-  async findAll(): Promise<CustomizationCategory[]> {
-    return await this.itemRepository.find();
+  async findAll(option_id?: number): Promise<CustomizationCategory[]> {
+    const query = this.itemRepository
+      .createQueryBuilder('category')
+      .leftJoinAndSelect('category.options', 'options')
+      .orderBy('category.display_order', 'ASC');
+
+    if (option_id) {
+      query.where('options.id = :option_id', { option_id });
+    }
+
+    return await query.getMany();
   }
 
   async findOne(id: number): Promise<CustomizationCategory> {
     const found = await this.itemRepository.findOne({
       where: { id },
+      relations: ['options'],
     });
 
     if (!found) {
@@ -33,16 +43,25 @@ export class CustomizationCategoriesService {
     multiple_select: boolean;
     required: boolean;
   }): Promise<CustomizationCategory> {
-    const item = this.itemRepository.create({
-      name: customization_category.name,
-      display_order: customization_category.display_order,
-      multiple_select: customization_category.multiple_select,
-      required: customization_category.required,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    });
+    try {
+      const newCategory = this.itemRepository.create({
+        name: customization_category.name,
+        display_order: customization_category.display_order,
+        multiple_select: customization_category.multiple_select,
+        required: customization_category.required,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
 
-    return await this.itemRepository.save(item);
+      const savedCategory = await this.itemRepository.save(newCategory);
+
+      return await this.itemRepository.findOne({
+        where: { id: savedCategory.id },
+        relations: ['options'],
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 
   async update(
@@ -54,15 +73,26 @@ export class CustomizationCategoriesService {
       required: boolean;
     },
   ): Promise<CustomizationCategory> {
-    const item = await this.findOne(id);
+    const found = await this.itemRepository.findOne({
+      where: { id },
+      relations: ['options'],
+    });
 
-    item.name = customization_category.name;
-    item.display_order = customization_category.display_order;
-    item.multiple_select = customization_category.multiple_select;
-    item.required = customization_category.required;
-    item.updatedAt = new Date().toISOString();
+    if (!found) {
+      throw new NotFoundException(`Category with ID "${id}" not found`);
+    }
 
-    return await this.itemRepository.save(item);
+    const updatedCategory = Object.assign(found, customization_category);
+
+    try {
+      await this.itemRepository.save(updatedCategory);
+      return await this.itemRepository.findOne({
+        where: { id },
+        relations: ['options'],
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 
   async delete(id: number): Promise<{ message: string }> {

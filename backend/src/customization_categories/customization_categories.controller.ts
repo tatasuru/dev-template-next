@@ -15,10 +15,16 @@ import { CustomizationCategoriesService } from './customization_categories.servi
 import { CustomizationCategoryResponseDto } from './dto/customization_categories-response.dto';
 import { CustomizationCategoryCreateDto } from './dto/customization_categories-create.dto';
 import { CustomizationCategoryDeleteDto } from './dto/customization_categories-delete.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiQuery,
+} from '@nestjs/swagger';
 
-@ApiTags('categories')
-@Controller('categories')
+@ApiTags('customization_categories')
+@Controller('customization_categories')
 export class CustomizationCategoriesController {
   constructor(
     private readonly categoriesService: CustomizationCategoriesService,
@@ -26,15 +32,45 @@ export class CustomizationCategoriesController {
 
   @Get()
   @ApiOperation({ summary: '全カテゴリー取得' })
+  @ApiQuery({
+    name: 'option_id',
+    required: false,
+    type: Number,
+    description: 'オプションIDでフィルター',
+  })
   @ApiResponse({
     status: 200,
-    description: '全カテゴリー取得',
+    description: '全カスタム可能なカテゴリー取得',
     type: CustomizationCategoryResponseDto,
     isArray: true,
   })
-  async findAll(): Promise<CustomizationCategory[]> {
+  async findAll(
+    @Query('option_id') option_id?: number,
+  ): Promise<CustomizationCategory[]> {
     try {
-      return await this.categoriesService.findAll();
+      return await this.categoriesService.findAll(option_id);
+    } catch (error) {
+      throw new HttpException(
+        error.message,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'カスタマイズ可能なカテゴリー取得' })
+  @ApiResponse({
+    status: 200,
+    description: 'カスタマイズ可能なカテゴリー取得',
+    type: CustomizationCategoryResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: '指定されたIDのカテゴリーが見つかりません',
+  })
+  async findOne(@Param('id') id: number): Promise<CustomizationCategory> {
+    try {
+      return await this.categoriesService.findOne(id);
     } catch (error) {
       throw new HttpException(
         error.message,
@@ -44,7 +80,7 @@ export class CustomizationCategoriesController {
   }
 
   @Post()
-  @ApiOperation({ summary: 'カテゴリー登録' })
+  @ApiOperation({ summary: 'カスタマイズ可能なカテゴリー登録' })
   @ApiResponse({
     status: 201,
     description: 'カテゴリーが正常に登録されました',
@@ -74,10 +110,13 @@ export class CustomizationCategoriesController {
   @ApiBody({ type: CustomizationCategoryCreateDto })
   async update(
     @Param('id') id: number,
-    @Body() categoryCreateDto: CustomizationCategoryCreateDto,
+    @Body() customizationCategoryCreateDto: CustomizationCategoryCreateDto,
   ): Promise<CustomizationCategory> {
     try {
-      return await this.categoriesService.update(id, categoryCreateDto);
+      return await this.categoriesService.update(
+        id,
+        customizationCategoryCreateDto,
+      );
     } catch (error) {
       throw new HttpException(
         error.message,

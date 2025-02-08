@@ -4,17 +4,26 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany,
+  ManyToOne,
+  JoinColumn,
   Index,
 } from 'typeorm';
+import { CustomizationCategories } from '../customization_categories/customization_categories.entity';
 
-@Entity('CustomizationOptions')
+@Entity('customizationOptions')
 export class CustomizationOptions {
   @PrimaryGeneratedColumn('increment')
   readonly id: number;
 
   @Column({ name: 'customization_category_id', type: 'int', nullable: false })
   readonly customization_category_id: number;
+
+  @ManyToOne(
+    () => CustomizationCategories,
+    (customizationCategory) => customizationCategory.options,
+  )
+  @JoinColumn({ name: 'customization_category_id' })
+  customization_category: CustomizationCategories;
 
   @Column({ type: 'varchar', length: 50, nullable: false })
   name: string;

@@ -9,7 +9,7 @@ export class CustomizationCategoryResponseDto {
   id: number;
 
   @ApiProperty({
-    example: 'recipe name',
+    example: 'パンの種類',
     description: 'カスタマイズカテゴリー名',
   })
   name: number;

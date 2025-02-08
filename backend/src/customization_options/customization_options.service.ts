@@ -51,17 +51,17 @@ export class CustomizationOptionsService {
     id: number,
     customization_option: {
       name: string;
+      image_url: string;
+      additional_price: number;
       display_order: number;
-      multiple_select: boolean;
-      required: boolean;
     },
   ): Promise<CustomizationOption> {
     const item = await this.findOne(id);
 
     item.name = customization_option.name;
+    item.image_url = customization_option.image_url;
+    item.additional_price = customization_option.additional_price;
     item.display_order = customization_option.display_order;
-    item.multiple_select = customization_option.multiple_select;
-    item.required = customization_option.required;
     item.updatedAt = new Date().toISOString();
 
     return await this.itemRepository.save(item);

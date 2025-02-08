@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { RecipesModule } from './recipes/recipes.module';
 import { CategoriesModule } from './categories/categories.module';
 import { CustomizationCategoriesModule } from './customization_categories/customization_categories.module';
+import { CustomizationOptionsModule } from './customization_options/customization_options.module';
 
 @Module({
   // TODO: find env variables in ../../.env
@@ -17,6 +18,7 @@ import { CustomizationCategoriesModule } from './customization_categories/custom
     RecipesModule,
     CategoriesModule,
     CustomizationCategoriesModule,
+    CustomizationOptionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

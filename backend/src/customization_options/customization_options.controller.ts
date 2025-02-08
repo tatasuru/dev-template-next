@@ -10,18 +10,18 @@ import {
   HttpStatus,
   HttpException,
 } from '@nestjs/common';
-import { CustomizationCategory } from './customization_options.model';
-import { CustomizationCategoriesService } from './customization_options.service';
-import { CustomizationCategoryResponseDto } from './dto/customization_categories-response.dto';
-import { CustomizationCategoryCreateDto } from './dto/customization_categories-create.dto';
-import { CustomizationCategoryDeleteDto } from './dto/customization_categories-delete.dto';
+import { CustomizationOption } from './customization_options.model';
+import { CustomizationOptionsService } from './customization_options.service';
+import { CustomizationOptionResponseDto } from './dto/customization_options-response.dto';
+import { CustomizationOptionCreateDto } from './dto/customization_categories-create.dto';
+import { CustomizationOptionDeleteDto } from './dto/customization_options-delete.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 
-@ApiTags('categories')
-@Controller('categories')
-export class CustomizationCategoriesController {
+@ApiTags('customization_options')
+@Controller('customization_options')
+export class CustomizationOptionsController {
   constructor(
-    private readonly categoriesService: CustomizationCategoriesService,
+    private readonly categoriesService: CustomizationOptionsService,
   ) {}
 
   @Get()
@@ -29,10 +29,10 @@ export class CustomizationCategoriesController {
   @ApiResponse({
     status: 200,
     description: '全カテゴリー取得',
-    type: CustomizationCategoryResponseDto,
+    type: CustomizationOptionResponseDto,
     isArray: true,
   })
-  async findAll(): Promise<CustomizationCategory[]> {
+  async findAll(): Promise<CustomizationOption[]> {
     try {
       return await this.categoriesService.findAll();
     } catch (error) {
@@ -48,12 +48,12 @@ export class CustomizationCategoriesController {
   @ApiResponse({
     status: 201,
     description: 'カテゴリーが正常に登録されました',
-    type: CustomizationCategoryResponseDto,
+    type: CustomizationOptionResponseDto,
   })
-  @ApiBody({ type: CustomizationCategoryCreateDto })
+  @ApiBody({ type: CustomizationOptionCreateDto })
   async create(
-    @Body() categoryCreateDto: CustomizationCategoryCreateDto,
-  ): Promise<CustomizationCategory> {
+    @Body() categoryCreateDto: CustomizationOptionCreateDto,
+  ): Promise<CustomizationOption> {
     try {
       return await this.categoriesService.create(categoryCreateDto);
     } catch (error) {
@@ -69,15 +69,18 @@ export class CustomizationCategoriesController {
   @ApiResponse({
     status: 200,
     description: 'カテゴリーが正常に更新されました',
-    type: CustomizationCategoryResponseDto,
+    type: CustomizationOptionResponseDto,
   })
-  @ApiBody({ type: CustomizationCategoryCreateDto })
+  @ApiBody({ type: CustomizationOptionCreateDto })
   async update(
     @Param('id') id: number,
-    @Body() categoryCreateDto: CustomizationCategoryCreateDto,
-  ): Promise<CustomizationCategory> {
+    @Body() customizationOptionCreateDto: CustomizationOptionCreateDto,
+  ): Promise<CustomizationOption> {
     try {
-      return await this.categoriesService.update(id, categoryCreateDto);
+      return await this.categoriesService.update(
+        id,
+        customizationOptionCreateDto as CustomizationOption,
+      );
     } catch (error) {
       throw new HttpException(
         error.message,
