@@ -6,9 +6,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  OneToMany,
   JoinColumn,
 } from 'typeorm';
 import { Categories } from '../categories/categories.entity';
+import { RecipeCustomizations } from '../recipe_customizations/entities/recipe_customization.entity';
 
 @Entity('recipes')
 export class Recipes {
@@ -21,6 +23,12 @@ export class Recipes {
   @ManyToOne(() => Categories, (category) => category.recipes)
   @JoinColumn({ name: 'category_id' })
   category: Categories;
+
+  @OneToMany(
+    () => RecipeCustomizations,
+    (recipeCustomization) => recipeCustomization.recipe,
+  )
+  recipeCustomizations: RecipeCustomizations[];
 
   @Column({ type: 'varchar', length: 255 })
   name: string;

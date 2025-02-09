@@ -31,12 +31,14 @@ export class CustomizationOptionsService {
 
   async create(customization_option: {
     name: string;
+    customization_category_id: number;
     image_url: string;
     additional_price: number;
     display_order: number;
   }): Promise<CustomizationOption> {
     const item = this.itemRepository.create({
       name: customization_option.name,
+      customization_category_id: customization_option.customization_category_id,
       image_url: customization_option.image_url,
       additional_price: customization_option.additional_price,
       display_order: customization_option.display_order,

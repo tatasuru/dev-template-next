@@ -85,9 +85,10 @@ export class CustomizationCategoriesService {
     const updatedCategory = Object.assign(found, customization_category);
 
     try {
-      await this.itemRepository.save(updatedCategory);
+      const savedCategory = await this.itemRepository.save(updatedCategory);
+
       return await this.itemRepository.findOne({
-        where: { id },
+        where: { id: savedCategory.id },
         relations: ['options'],
       });
     } catch (error) {

@@ -17,6 +17,7 @@ export class RecipesService {
     const query = this.itemRepository
       .createQueryBuilder('recipe')
       .leftJoinAndSelect('recipe.category', 'category')
+      .leftJoinAndSelect('recipe.recipeCustomizations', 'recipeCustomizations')
       .orderBy('recipe.createdAt', 'DESC');
 
     if (size && size > 0) {
@@ -33,7 +34,7 @@ export class RecipesService {
   async findOne(id: number): Promise<Recipe> {
     const found = await this.itemRepository.findOne({
       where: { id },
-      relations: ['category'],
+      relations: ['category', 'recipeCustomizations'],
     });
 
     if (!found) {
@@ -64,7 +65,7 @@ export class RecipesService {
       // return savedRecipe;
       return await this.itemRepository.findOne({
         where: { id: savedRecipe.id },
-        relations: ['category'],
+        relations: ['category', 'recipeCustomizations'],
       });
     } catch (error) {
       // error code 23503 is a foreign key violation
@@ -80,7 +81,7 @@ export class RecipesService {
   async update(id: number, recipe: RecipeUpdateDto): Promise<Recipe> {
     const found = await this.itemRepository.findOne({
       where: { id },
-      relations: ['category'],
+      relations: ['category', 'recipeCustomizations'],
     });
 
     if (!found) {
@@ -94,7 +95,7 @@ export class RecipesService {
       await this.itemRepository.save(updatedRecipe);
       return await this.itemRepository.findOne({
         where: { id },
-        relations: ['category'],
+        relations: ['category', 'recipeCustomizations'],
       });
     } catch (error) {
       if (error.code === '23503') {

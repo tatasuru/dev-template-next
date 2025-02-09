@@ -8,6 +8,7 @@ import {
   Index,
 } from 'typeorm';
 import { CustomizationOptions } from '../customization_options/customization_options.entity';
+import { RecipeCustomizations } from '../recipe_customizations/entities/recipe_customization.entity';
 
 @Entity('customizationCategories')
 export class CustomizationCategories {
@@ -42,6 +43,12 @@ export class CustomizationCategories {
     (customizationOption) => customizationOption.customization_category,
   )
   options: CustomizationOptions[];
+
+  @OneToMany(
+    () => RecipeCustomizations,
+    (recipeCustomization) => recipeCustomization.customization_category_id,
+  )
+  recipeCustomizations: RecipeCustomizations[];
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   readonly createdAt: Date;

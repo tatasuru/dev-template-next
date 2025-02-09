@@ -21,7 +21,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 @Controller('customization_options')
 export class CustomizationOptionsController {
   constructor(
-    private readonly categoriesService: CustomizationOptionsService,
+    private readonly customizationOptionsService: CustomizationOptionsService,
   ) {}
 
   @Get()
@@ -34,11 +34,33 @@ export class CustomizationOptionsController {
   })
   async findAll(): Promise<CustomizationOption[]> {
     try {
-      return await this.categoriesService.findAll();
+      return await this.customizationOptionsService.findAll();
     } catch (error) {
       throw new HttpException(
         error.message,
         error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: '指定されたIDのカテゴリーを取得' })
+  @ApiResponse({
+    status: 200,
+    description: 'カテゴリー取得成功',
+    type: CustomizationOptionResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'カテゴリーが見つかりません',
+  })
+  async findOne(@Param('id') id: number): Promise<CustomizationOption> {
+    try {
+      return await this.customizationOptionsService.findOne(id);
+    } catch (error) {
+      throw new HttpException(
+        error.message,
+        error.status || HttpStatus.NOT_FOUND,
       );
     }
   }
@@ -55,7 +77,7 @@ export class CustomizationOptionsController {
     @Body() categoryCreateDto: CustomizationOptionCreateDto,
   ): Promise<CustomizationOption> {
     try {
-      return await this.categoriesService.create(categoryCreateDto);
+      return await this.customizationOptionsService.create(categoryCreateDto);
     } catch (error) {
       throw new HttpException(
         error.message,
@@ -77,7 +99,7 @@ export class CustomizationOptionsController {
     @Body() customizationOptionCreateDto: CustomizationOptionCreateDto,
   ): Promise<CustomizationOption> {
     try {
-      return await this.categoriesService.update(
+      return await this.customizationOptionsService.update(
         id,
         customizationOptionCreateDto as CustomizationOption,
       );
@@ -106,7 +128,7 @@ export class CustomizationOptionsController {
   })
   async delete(@Param('id') id: number): Promise<{ message: string }> {
     try {
-      return await this.categoriesService.delete(id);
+      return await this.customizationOptionsService.delete(id);
     } catch (error) {
       throw new HttpException(
         error.message,
