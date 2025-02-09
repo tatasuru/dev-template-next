@@ -9,6 +9,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { CustomizationCategoriesModule } from './customization_categories/customization_categories.module';
 import { CustomizationOptionsModule } from './customization_options/customization_options.module';
 import { OrdersModule } from './orders/orders.module';
+import { RecipeCustomizationsModule } from './recipe_customizations/recipe_customizations.module';
 
 @Module({
   // TODO: find env variables in ../../.env
@@ -21,6 +22,7 @@ import { OrdersModule } from './orders/orders.module';
     CustomizationCategoriesModule,
     CustomizationOptionsModule,
     OrdersModule,
+    RecipeCustomizationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
