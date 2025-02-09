@@ -3,6 +3,7 @@ import { Users } from '../../users/users.entity';
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -27,6 +28,7 @@ export class Order {
   // payment_id: number;
   // coupon_id: number;
 
+  @Index()
   @Column({
     type: 'enum',
     enum: OrderStatus,
@@ -67,6 +69,7 @@ export class Order {
   })
   payment_details: string;
 
+  @Index()
   @Column({
     type: 'timestamp',
     default: () => 'now()',
