@@ -18,7 +18,7 @@ export class RecipeCustomizationResponseDto {
     example: 1,
     description: 'カスタマイズカテゴリーID',
   })
-  customization_category_id: number;
+  customization_category_ids: number[];
 
   @ApiProperty()
   createdAt: Date;

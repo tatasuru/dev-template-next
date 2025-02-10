@@ -6,6 +6,8 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { Recipes } from '../../recipes/recipes.entity';
 import { CustomizationCategories } from '../../customization_categories/customization_categories.entity';
@@ -22,12 +24,29 @@ export class RecipeCustomizations {
   @JoinColumn({ name: 'recipe_id' })
   recipe: Recipes;
 
-  @Column({ name: 'customization_category_id' })
-  customization_category_id: number;
+  @Column('integer', {
+    name: 'customization_category_ids',
+    array: true,
+    nullable: true,
+    default: [],
+  })
+  customization_category_ids: number[];
 
-  @ManyToOne(() => CustomizationCategories)
-  @JoinColumn({ name: 'customization_category_id' })
-  customizationCategory: CustomizationCategories;
+  @ManyToMany(() => CustomizationCategories, {
+    eager: true,
+  })
+  @JoinTable({
+    name: 'recipe_customization_categories',
+    joinColumn: {
+      name: 'recipe_customization_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'customization_category_id',
+      referencedColumnName: 'id',
+    },
+  })
+  customization_categories: CustomizationCategories[];
 
   @CreateDateColumn()
   createdAt: Date;

@@ -2,25 +2,28 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RecipeCustomizations } from './entities/recipe_customization.entity';
+import { CustomizationCategories } from '../customization_categories/customization_categories.entity';
 import { RecipeCustomization } from './recipe_customizations.model';
 
 @Injectable()
 export class RecipeCustomizationsService {
   constructor(
     @InjectRepository(RecipeCustomizations)
-    private itemRepository: Repository<RecipeCustomization>,
+    private itemRepository: Repository<RecipeCustomizations>,
+    @InjectRepository(CustomizationCategories)
+    private categoryRepository: Repository<CustomizationCategories>,
   ) {}
 
-  async findAll(): Promise<RecipeCustomization[]> {
+  async findAll(): Promise<RecipeCustomizations[]> {
     return await this.itemRepository.find({
-      relations: ['recipe', 'customizationCategory'],
+      relations: ['recipe', 'customization_categories'],
     });
   }
 
-  async findOne(id: number): Promise<RecipeCustomization> {
+  async findOne(id: number): Promise<RecipeCustomizations> {
     const found = await this.itemRepository.findOne({
       where: { id },
-      relations: ['recipe', 'customizationCategory'],
+      relations: ['recipe', 'customization_categories'],
     });
 
     if (!found) {
@@ -32,14 +35,71 @@ export class RecipeCustomizationsService {
     return found;
   }
 
+  // async create(recipeCustomization: {
+  //   recipe_id: number;
+  //   customization_category_ids: number[];
+  // }): Promise<RecipeCustomization> {
+  //   try {
+  //     const item = this.itemRepository.create({
+  //       recipe_id: recipeCustomization.recipe_id,
+  //       customization_category_ids:
+  //         recipeCustomization.customization_category_ids,
+  //     });
+
+  //     return await this.itemRepository.save(item);
+  //   } catch (error) {
+  //     throw new Error(
+  //       `Failed to create recipe customization: ${error.message}`,
+  //     );
+  //   }
+  // }
+
   async create(recipeCustomization: {
     recipe_id: number;
-    customization_category_id: number;
-  }): Promise<RecipeCustomization> {
-    const item = this.itemRepository.create({
-      recipe_id: recipeCustomization.recipe_id,
-      customization_category_id: recipeCustomization.customization_category_id,
-    });
+    customization_category_ids: number[];
+  }): Promise<RecipeCustomizations> {
+    try {
+      // カテゴリエンティティを取得
+      const categories = await this.categoryRepository.findByIds(
+        recipeCustomization.customization_category_ids,
+      );
+
+      const item = this.itemRepository.create({
+        recipe_id: recipeCustomization.recipe_id,
+        customization_category_ids:
+          recipeCustomization.customization_category_ids,
+        customization_categories: categories, // カテゴリの関連付け
+      });
+
+      return await this.itemRepository.save(item);
+    } catch (error) {
+      throw new Error(
+        `Failed to create recipe customization: ${error.message}`,
+      );
+    }
+  }
+
+  async update(
+    id: number,
+    recipeCustomization: {
+      recipe_id?: number;
+      customization_category_ids?: number[];
+    },
+  ): Promise<RecipeCustomizations> {
+    const item = await this.findOne(id);
+
+    if (recipeCustomization.recipe_id) {
+      item.recipe_id = recipeCustomization.recipe_id;
+    }
+
+    if (recipeCustomization.customization_category_ids) {
+      const categories = await this.categoryRepository.findByIds(
+        recipeCustomization.customization_category_ids,
+      );
+      item.customization_category_ids =
+        recipeCustomization.customization_category_ids;
+      item.customization_categories = categories;
+    }
 
     return await this.itemRepository.save(item);
   }

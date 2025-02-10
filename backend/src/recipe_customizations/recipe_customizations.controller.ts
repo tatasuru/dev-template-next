@@ -11,7 +11,9 @@ import {
 } from '@nestjs/common';
 import { RecipeCustomizationsService } from './recipe_customizations.service';
 import { RecipeCustomizationResponseDto } from './dto/recipe-customization-response.dto';
+import { CreateRecipeCustomizationDto } from './dto/create-recipe-customization.dto';
 import { RecipeCustomization } from './recipe_customizations.model';
+import { RecipeCustomizations } from './entities/recipe_customization.entity';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 
 @ApiTags('recipe_customizations')
@@ -29,7 +31,7 @@ export class RecipeCustomizationsController {
     type: RecipeCustomizationResponseDto,
     isArray: true,
   })
-  async findAll(): Promise<RecipeCustomization[]> {
+  async findAll(): Promise<RecipeCustomizations[]> {
     try {
       return await this.recipeCustomizationsService.findAll();
     } catch (error) {
@@ -51,7 +53,7 @@ export class RecipeCustomizationsController {
     status: 404,
     description: 'レシピカスタマイズが見つかりません',
   })
-  async findOne(@Param('id') id: number): Promise<RecipeCustomization> {
+  async findOne(@Param('id') id: number): Promise<RecipeCustomizations> {
     try {
       return await this.recipeCustomizationsService.findOne(id);
     } catch (error) {
@@ -71,8 +73,8 @@ export class RecipeCustomizationsController {
   })
   @ApiBody({ type: RecipeCustomizationResponseDto })
   async create(
-    @Body() recipeCustomization: RecipeCustomizationResponseDto,
-  ): Promise<RecipeCustomization> {
+    @Body() recipeCustomization: CreateRecipeCustomizationDto,
+  ): Promise<RecipeCustomizations> {
     try {
       return await this.recipeCustomizationsService.create(recipeCustomization);
     } catch (error) {

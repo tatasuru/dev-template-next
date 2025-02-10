@@ -46,7 +46,7 @@ export class CustomizationCategories {
 
   @OneToMany(
     () => RecipeCustomizations,
-    (recipeCustomization) => recipeCustomization.customization_category_id,
+    (recipeCustomization) => recipeCustomization.customization_categories,
   )
   recipeCustomizations: RecipeCustomizations[];
 
