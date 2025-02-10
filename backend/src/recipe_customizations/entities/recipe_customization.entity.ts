@@ -34,6 +34,7 @@ export class RecipeCustomizations {
 
   @ManyToMany(() => CustomizationCategories, {
     eager: true,
+    cascade: true,
   })
   @JoinTable({
     name: 'recipe_customization_categories',

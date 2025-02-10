@@ -39,6 +39,7 @@ export class CustomizationCategoriesService {
 
   async create(customization_category: {
     name: string;
+    value: string;
     display_order: number;
     multiple_select: boolean;
     required: boolean;
@@ -46,6 +47,7 @@ export class CustomizationCategoriesService {
     try {
       const newCategory = this.itemRepository.create({
         name: customization_category.name,
+        value: customization_category.value,
         display_order: customization_category.display_order,
         multiple_select: customization_category.multiple_select,
         required: customization_category.required,
@@ -68,6 +70,7 @@ export class CustomizationCategoriesService {
     id: number,
     customization_category: {
       name: string;
+      value: string;
       display_order: number;
       multiple_select: boolean;
       required: boolean;

@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  ManyToMany,
   Index,
 } from 'typeorm';
 import { CustomizationOptions } from '../customization_options/customization_options.entity';
@@ -17,6 +18,9 @@ export class CustomizationCategories {
 
   @Column({ type: 'varchar', length: 50, nullable: false })
   name: string;
+
+  @Column({ type: 'varchar', length: 50, nullable: false })
+  value: string;
 
   @Index()
   @Column({ name: 'display_order', type: 'int', nullable: false })
@@ -48,7 +52,7 @@ export class CustomizationCategories {
     () => RecipeCustomizations,
     (recipeCustomization) => recipeCustomization.customization_categories,
   )
-  recipeCustomizations: RecipeCustomizations[];
+  recipe_customizations: RecipeCustomizations[];
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   readonly createdAt: Date;

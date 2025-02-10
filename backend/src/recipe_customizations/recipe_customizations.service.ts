@@ -16,14 +16,24 @@ export class RecipeCustomizationsService {
 
   async findAll(): Promise<RecipeCustomizations[]> {
     return await this.itemRepository.find({
-      relations: ['recipe', 'customization_categories'],
+      relations: {
+        recipe: true,
+        customization_categories: {
+          options: true,
+        },
+      },
     });
   }
 
   async findOne(id: number): Promise<RecipeCustomizations> {
     const found = await this.itemRepository.findOne({
       where: { id },
-      relations: ['recipe', 'customization_categories'],
+      relations: {
+        recipe: true,
+        customization_categories: {
+          options: true,
+        },
+      },
     });
 
     if (!found) {
@@ -35,24 +45,25 @@ export class RecipeCustomizationsService {
     return found;
   }
 
-  // async create(recipeCustomization: {
-  //   recipe_id: number;
-  //   customization_category_ids: number[];
-  // }): Promise<RecipeCustomization> {
-  //   try {
-  //     const item = this.itemRepository.create({
-  //       recipe_id: recipeCustomization.recipe_id,
-  //       customization_category_ids:
-  //         recipeCustomization.customization_category_ids,
-  //     });
+  async findAllByRecipeId(recipe_id: number): Promise<RecipeCustomizations> {
+    const found = await this.itemRepository.findOne({
+      where: { recipe_id },
+      relations: {
+        recipe: true,
+        customization_categories: {
+          options: true,
+        },
+      },
+    });
 
-  //     return await this.itemRepository.save(item);
-  //   } catch (error) {
-  //     throw new Error(
-  //       `Failed to create recipe customization: ${error.message}`,
-  //     );
-  //   }
-  // }
+    if (!found) {
+      throw new NotFoundException(
+        `RecipeCustomization with ID "${recipe_id}" not found`,
+      );
+    }
+
+    return found;
+  }
 
   async create(recipeCustomization: {
     recipe_id: number;

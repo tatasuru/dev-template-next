@@ -126,6 +126,19 @@ export function MenuForm(
       base_price: number;
       description: string;
     };
+    customizationCategories: {
+      id: number;
+      name: string;
+      display_order: number;
+      multiple_select: boolean;
+      required: boolean;
+      options: {
+        id: number;
+        name: string;
+        display_order: number;
+        customization_category_id: number;
+      }[];
+    }[];
   }>
 ) {
   // 1. Define your form.

@@ -69,7 +69,7 @@ const categories: {
 
 async function getRecipes() {
   const res = await fetch(
-    "http://host.docker.internal:8000/recipes?size=3&category_id=3",
+    "http://host.docker.internal:8000/recipes?size=3&category_id=1",
     {
       method: "GET",
       cache: "no-store",
@@ -89,6 +89,7 @@ async function getRecipes() {
 
 export default async function Home() {
   const recipes = await getRecipes();
+  console.log(recipes);
   const items: Recipe[] = recipes.map((recipe: Recipe) => ({
     image_url: recipe.image_url,
     badge: recipe.badge,

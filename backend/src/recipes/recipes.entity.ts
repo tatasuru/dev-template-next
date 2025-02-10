@@ -28,7 +28,7 @@ export class Recipes {
     () => RecipeCustomizations,
     (recipeCustomization) => recipeCustomization.recipe,
   )
-  recipeCustomizations: RecipeCustomizations[];
+  recipe_customizations: RecipeCustomizations[];
 
   @Column({ type: 'varchar', length: 255 })
   name: string;
