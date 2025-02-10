@@ -10,7 +10,7 @@ import {
 import { Recipes } from '../../recipes/recipes.entity';
 import { CustomizationCategories } from '../../customization_categories/customization_categories.entity';
 
-@Entity('recipeCustomizations')
+@Entity('recipe_customizations')
 export class RecipeCustomizations {
   @PrimaryGeneratedColumn()
   id: number;

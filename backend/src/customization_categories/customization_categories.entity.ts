@@ -10,7 +10,7 @@ import {
 import { CustomizationOptions } from '../customization_options/customization_options.entity';
 import { RecipeCustomizations } from '../recipe_customizations/entities/recipe_customization.entity';
 
-@Entity('customizationCategories')
+@Entity('customization_categories')
 export class CustomizationCategories {
   @PrimaryGeneratedColumn('increment')
   readonly id: number;
