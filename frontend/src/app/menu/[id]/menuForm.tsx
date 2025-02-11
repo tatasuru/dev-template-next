@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import type { StaticImageData } from "next/image";
 import { z } from "zod";
 import { Icon } from "@/components/shared/icon";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import PlusIcon from "~icons/mdi/plus";
 import MinusIcon from "~icons/mdi/minus";
@@ -77,32 +77,41 @@ export function MenuForm(
     console.log(values, totalPrice);
   }
 
-  const breads =
-    props.customizationCategories
-      .find((category) => category.value === "breads")
-      ?.options.map((option) => ({
-        image_url: option.image_url,
-        name: option.name,
-        additional_price: option.additional_price,
-      })) ?? [];
+  const breads = useMemo(
+    () =>
+      props.customizationCategories
+        .find((category) => category.value === "breads")
+        ?.options.map((option) => ({
+          image_url: option.image_url,
+          name: option.name,
+          additional_price: option.additional_price,
+        })) ?? [],
+    [props.customizationCategories]
+  );
 
-  const vegetables =
-    props.customizationCategories
-      .find((category) => category.value === "vegetables")
-      ?.options.map((option) => ({
-        image_url: option.image_url,
-        name: option.name,
-        additional_price: option.additional_price,
-      })) ?? [];
+  const vegetables = useMemo(
+    () =>
+      props.customizationCategories
+        .find((category) => category.value === "vegetables")
+        ?.options.map((option) => ({
+          image_url: option.image_url,
+          name: option.name,
+          additional_price: option.additional_price,
+        })) ?? [],
+    [props.customizationCategories]
+  );
 
-  const sources =
-    props.customizationCategories
-      .find((category) => category.value === "sources")
-      ?.options.map((option) => ({
-        image_url: option.image_url,
-        name: option.name,
-        additional_price: option.additional_price,
-      })) ?? [];
+  const sources = useMemo(
+    () =>
+      props.customizationCategories
+        .find((category) => category.value === "sources")
+        ?.options.map((option) => ({
+          image_url: option.image_url,
+          name: option.name,
+          additional_price: option.additional_price,
+        })) ?? [],
+    [props.customizationCategories]
+  );
 
   const [totalPrice, setTotalPrice] = useState(props.recipe.base_price);
   const quantity = form.watch("quantity");
