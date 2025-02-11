@@ -8,6 +8,12 @@ export class CustomizationCategoryCreateDto {
   name: string;
 
   @ApiProperty({
+    example: 'bread',
+    description: 'カスタマイズカテゴリーのvalue',
+  })
+  value: string;
+
+  @ApiProperty({
     example: '1',
     description: '表示順',
   })

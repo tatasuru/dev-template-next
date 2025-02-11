@@ -12,12 +12,18 @@ export class CustomizationOptionsService {
   ) {}
 
   async findAll(): Promise<CustomizationOption[]> {
-    return await this.itemRepository.find();
+    return await this.itemRepository.find({
+      order: {
+        display_order: 'ASC',
+      },
+      relations: ['customization_category', 'order_customizations'],
+    });
   }
 
   async findOne(id: number): Promise<CustomizationOption> {
     const found = await this.itemRepository.findOne({
       where: { id },
+      relations: ['customization_category', 'order_customizations'],
     });
 
     if (!found) {

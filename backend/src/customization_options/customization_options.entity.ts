@@ -7,16 +7,24 @@ import {
   ManyToOne,
   JoinColumn,
   Index,
+  OneToMany,
 } from 'typeorm';
 import { CustomizationCategories } from '../customization_categories/customization_categories.entity';
+import { OrderCustomizations } from '../order_customizations/entities/order_customization.entity';
 
-@Entity('customizationOptions')
+@Entity('customization_options')
 export class CustomizationOptions {
   @PrimaryGeneratedColumn('increment')
   readonly id: number;
 
   @Column({ name: 'customization_category_id', type: 'int', nullable: false })
   readonly customization_category_id: number;
+
+  @OneToMany(
+    () => OrderCustomizations,
+    (orderCustomization) => orderCustomization.customization_option,
+  )
+  order_customizations: OrderCustomizations[];
 
   @ManyToOne(
     () => CustomizationCategories,

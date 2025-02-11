@@ -6,10 +6,13 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { OrderStatus } from '../order-status.enum';
 import { PaymentMethod } from '../order-payment-method.enum';
+import { OrderCustomizations } from '../../order_customizations/entities/order_customization.entity';
+import { OrderCustomization } from '../../order_customizations/order_customizations.model';
 
 @Entity('orders')
 export class Order {
@@ -27,6 +30,12 @@ export class Order {
   // TODO: paymenIdとcouponIdを定義する
   // payment_id: number;
   // coupon_id: number;
+
+  @OneToMany(
+    () => OrderCustomizations,
+    (orderCustomization) => orderCustomization.order,
+  )
+  order_customizations: OrderCustomization[];
 
   @Index()
   @Column({

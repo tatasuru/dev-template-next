@@ -5,10 +5,10 @@ import { useForm } from "react-hook-form";
 import type { StaticImageData } from "next/image";
 import { z } from "zod";
 import { Icon } from "@/components/shared/icon";
+import { useState, useEffect, useMemo } from "react";
 
 import PlusIcon from "~icons/mdi/plus";
 import MinusIcon from "~icons/mdi/minus";
-import SandwichIcon from "../../../../public/sandwich-icon.png";
 
 import { Textarea } from "@/components/shadcn-ui/textarea";
 import { Button } from "@/components/shadcn-ui/button";
@@ -38,87 +38,6 @@ const formSchema = z.object({
   request: z.string().optional(),
 });
 
-const breads: {
-  icon: StaticImageData;
-  text: string;
-  value: string;
-}[] = [
-  {
-    icon: SandwichIcon,
-    text: "ホワイト",
-    value: "white",
-  },
-  {
-    icon: SandwichIcon,
-    text: "全粒粉",
-    value: "wholewheat",
-  },
-  {
-    icon: SandwichIcon,
-    text: "ライ麦",
-    value: "rye",
-  },
-  {
-    icon: SandwichIcon,
-    text: "セサミ",
-    value: "sesame",
-  },
-];
-
-const vegetables: {
-  icon: StaticImageData;
-  text: string;
-  value: string;
-}[] = [
-  {
-    icon: SandwichIcon,
-    text: "玉ねぎ",
-    value: "onion",
-  },
-  {
-    icon: SandwichIcon,
-    text: "トマト",
-    value: "tomato",
-  },
-  {
-    icon: SandwichIcon,
-    text: "オリーブ",
-    value: "olive",
-  },
-  {
-    icon: SandwichIcon,
-    text: "レタス",
-    value: "lettuce",
-  },
-];
-
-const sources: {
-  icon: StaticImageData;
-  text: string;
-  value: string;
-}[] = [
-  {
-    icon: SandwichIcon,
-    text: "チリソース",
-    value: "chili",
-  },
-  {
-    icon: SandwichIcon,
-    text: "サルサソース",
-    value: "salsa",
-  },
-  {
-    icon: SandwichIcon,
-    text: "マヨネーズ",
-    value: "mayo",
-  },
-  {
-    icon: SandwichIcon,
-    text: "ケチャップ",
-    value: "ketchup",
-  },
-];
-
 export function MenuForm(
   props: Readonly<{
     recipe: {
@@ -126,9 +45,23 @@ export function MenuForm(
       base_price: number;
       description: string;
     };
+    customizationCategories: {
+      id: number;
+      name: string;
+      value: string;
+      display_order: number;
+      multiple_select: boolean;
+      required: boolean;
+      options: {
+        id: number;
+        image_url: StaticImageData;
+        name: string;
+        additional_price: number;
+        display_order: number;
+      }[];
+    }[];
   }>
 ) {
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -140,12 +73,75 @@ export function MenuForm(
     },
   });
 
-  // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    console.log(values, totalPrice);
   }
+
+  const breads = useMemo(
+    () =>
+      props.customizationCategories
+        .find((category) => category.value === "breads")
+        ?.options.map((option) => ({
+          image_url: option.image_url,
+          name: option.name,
+          additional_price: option.additional_price,
+        })) ?? [],
+    [props.customizationCategories]
+  );
+
+  const vegetables = useMemo(
+    () =>
+      props.customizationCategories
+        .find((category) => category.value === "vegetables")
+        ?.options.map((option) => ({
+          image_url: option.image_url,
+          name: option.name,
+          additional_price: option.additional_price,
+        })) ?? [],
+    [props.customizationCategories]
+  );
+
+  const sources = useMemo(
+    () =>
+      props.customizationCategories
+        .find((category) => category.value === "sources")
+        ?.options.map((option) => ({
+          image_url: option.image_url,
+          name: option.name,
+          additional_price: option.additional_price,
+        })) ?? [],
+    [props.customizationCategories]
+  );
+
+  const [totalPrice, setTotalPrice] = useState(props.recipe.base_price);
+  const quantity = form.watch("quantity");
+  const selectedBread = form.watch("bread");
+  const selectedVegetables = form.watch("vegetables");
+  const selectedSource = form.watch("source");
+
+  // calculate total price
+  useEffect(() => {
+    const breadPrice =
+      breads.find((b) => b.name === selectedBread)?.additional_price ?? 0;
+    const vegetablesPrice = selectedVegetables.reduce((acc, vegName) => {
+      const veg = vegetables.find((v) => v.name === vegName);
+      return acc + (veg?.additional_price ?? 0);
+    }, 0);
+    const sourcePrice =
+      sources.find((s) => s.name === selectedSource)?.additional_price ?? 0;
+
+    const baseWithOptions =
+      props.recipe.base_price + breadPrice + vegetablesPrice + sourcePrice;
+    setTotalPrice(baseWithOptions);
+  }, [
+    selectedBread,
+    selectedVegetables,
+    selectedSource,
+    props.recipe.base_price,
+    breads,
+    vegetables,
+    sources,
+  ]);
 
   return (
     <Form {...form}>
@@ -161,13 +157,13 @@ export function MenuForm(
                 {breads.map((bread, index) => (
                   <FormControl key={index}>
                     <Icon
-                      iconImage={bread.icon}
-                      text={bread.text}
+                      iconImage={bread.image_url}
+                      text={bread.name}
                       {...field}
-                      selected={field.value === bread.value}
+                      selected={field.value === bread.name}
                       onClick={(e) => {
                         e.preventDefault();
-                        field.onChange(bread.value);
+                        field.onChange(bread.name);
                       }}
                     />
                   </FormControl>
@@ -192,21 +188,19 @@ export function MenuForm(
               </FormLabel>
               <div className="flex items-center justify-between">
                 {vegetables.map((vegetable) => (
-                  <FormControl key={vegetable.value}>
+                  <FormControl key={vegetable.name}>
                     <Icon
-                      iconImage={vegetable.icon}
-                      text={vegetable.text}
-                      selected={field.value.includes(vegetable.value)}
+                      iconImage={vegetable.image_url}
+                      text={vegetable.name}
+                      selected={field.value.includes(vegetable.name)}
                       onClick={(e) => {
                         e.preventDefault();
                         const currentValues = field.value || [];
-                        const newValues = currentValues.includes(
-                          vegetable.value
-                        )
+                        const newValues = currentValues.includes(vegetable.name)
                           ? currentValues.filter(
-                              (value) => value !== vegetable.value
+                              (value) => value !== vegetable.name
                             )
-                          : [...currentValues, vegetable.value];
+                          : [...currentValues, vegetable.name];
                         field.onChange(newValues);
                       }}
                     />
@@ -229,13 +223,13 @@ export function MenuForm(
                 {sources.map((source, index) => (
                   <FormControl key={index}>
                     <Icon
-                      iconImage={source.icon}
-                      text={source.text}
+                      iconImage={source.image_url}
+                      text={source.name}
                       {...field}
-                      selected={field.value === source.value}
+                      selected={field.value === source.name}
                       onClick={(e) => {
                         e.preventDefault();
-                        field.onChange(source.value);
+                        field.onChange(source.name);
                       }}
                     />
                   </FormControl>
@@ -270,7 +264,13 @@ export function MenuForm(
                     </Button>
                     <Input
                       type="number"
-                      defaultValue={field.value}
+                      value={field.value}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value) || 1;
+                        if (value >= 1) {
+                          field.onChange(value);
+                        }
+                      }}
                       className="text-center text-2xl text-main shadow-none"
                     />
                     <Button
@@ -321,7 +321,7 @@ export function MenuForm(
                 </p>
                 <div className="w-fit flex items-center gap-1">
                   <p className="text-2xl text-main font-black tracking-wider">
-                    {props.recipe.base_price * form.getValues().quantity}
+                    {totalPrice * quantity}
                     <span className="text-base font-bold">円</span>
                   </p>
                   <span className="text-xs font-medium text-muted-foreground">
@@ -331,7 +331,7 @@ export function MenuForm(
               </div>
               <p className="text-xs text-muted-foreground flex justify-end gap-2">
                 {props.recipe.name}
-                <span>{form.getValues().quantity}個</span>
+                <span>{quantity}個</span>
               </p>
             </div>
             <Button variant={"main"} size={"lg"} type="submit">

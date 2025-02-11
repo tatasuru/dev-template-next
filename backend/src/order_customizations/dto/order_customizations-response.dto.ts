@@ -1,24 +1,24 @@
 // dto/item-response.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 
-export class RecipeCustomizationResponseDto {
+export class OrderCustomizationsResponseDto {
   @ApiProperty({
     example: 1,
-    description: 'レシピカスタマイズID',
+    description: 'オーダーカスタマイズID',
   })
   id: number;
 
   @ApiProperty({
     example: 1,
-    description: 'レシピID',
+    description: 'オーダーID',
   })
-  recipe_id: number;
+  order_id: number;
 
   @ApiProperty({
     example: 1,
-    description: 'カスタマイズカテゴリーID',
+    description: 'カスタマイズオプションID',
   })
-  customization_category_ids: number[];
+  customization_option_id: number;
 
   @ApiProperty()
   createdAt: Date;

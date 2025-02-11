@@ -30,6 +30,8 @@ export function Icon({
         <Image
           src={iconImage}
           alt="icon"
+          width={64}
+          height={64}
           className={`size-9 ${selected ? "brightness-0 invert" : ""}`}
         />
       </Button>

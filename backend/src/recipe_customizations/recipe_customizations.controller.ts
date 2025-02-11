@@ -8,11 +8,20 @@ import {
   Delete,
   HttpStatus,
   HttpException,
+  Query,
 } from '@nestjs/common';
 import { RecipeCustomizationsService } from './recipe_customizations.service';
 import { RecipeCustomizationResponseDto } from './dto/recipe-customization-response.dto';
+import { CreateRecipeCustomizationDto } from './dto/create-recipe-customization.dto';
 import { RecipeCustomization } from './recipe_customizations.model';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { RecipeCustomizations } from './entities/recipe_customization.entity';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiQuery,
+} from '@nestjs/swagger';
 
 @ApiTags('recipe_customizations')
 @Controller('recipe_customizations')
@@ -22,15 +31,30 @@ export class RecipeCustomizationsController {
   ) {}
 
   @Get()
-  @ApiOperation({ summary: '全レシピカスタマイズ取得' })
+  @ApiOperation({
+    summary: '全レシピカスタマイズ取得（レシピIDで絞り込み可能）',
+  })
   @ApiResponse({
     status: 200,
     description: '全レシピカスタマイズ取得',
     type: RecipeCustomizationResponseDto,
     isArray: true,
   })
-  async findAll(): Promise<RecipeCustomization[]> {
+  @ApiQuery({
+    name: 'recipe_id',
+    required: false,
+    type: Number,
+    description: 'レシピIDによる絞り込み',
+  })
+  async findAll(
+    @Query('recipe_id') recipe_id?: number,
+  ): Promise<RecipeCustomizations[] | RecipeCustomizations> {
     try {
+      if (recipe_id) {
+        return await this.recipeCustomizationsService.findAllByRecipeId(
+          recipe_id,
+        );
+      }
       return await this.recipeCustomizationsService.findAll();
     } catch (error) {
       throw new HttpException(
@@ -51,7 +75,7 @@ export class RecipeCustomizationsController {
     status: 404,
     description: 'レシピカスタマイズが見つかりません',
   })
-  async findOne(@Param('id') id: number): Promise<RecipeCustomization> {
+  async findOne(@Param('id') id: number): Promise<RecipeCustomizations> {
     try {
       return await this.recipeCustomizationsService.findOne(id);
     } catch (error) {
@@ -71,8 +95,8 @@ export class RecipeCustomizationsController {
   })
   @ApiBody({ type: RecipeCustomizationResponseDto })
   async create(
-    @Body() recipeCustomization: RecipeCustomizationResponseDto,
-  ): Promise<RecipeCustomization> {
+    @Body() recipeCustomization: CreateRecipeCustomizationDto,
+  ): Promise<RecipeCustomizations> {
     try {
       return await this.recipeCustomizationsService.create(recipeCustomization);
     } catch (error) {
