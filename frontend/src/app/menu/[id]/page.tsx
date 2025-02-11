@@ -1,5 +1,13 @@
 import Image from "next/image";
 import { MenuForm } from "@/app/menu/[id]/menuForm";
+import PriceIcon from "~icons/solar/tag-price-bold";
+import CalorieIcon from "~icons/solar/fire-bold";
+import TimeIcon from "~icons/solar/clock-circle-bold";
+
+type MetricItem = {
+  icon: typeof PriceIcon;
+  value: string;
+};
 
 async function getRecipeCustomization(id: string) {
   const res = await fetch(
@@ -28,7 +36,26 @@ export default async function MenuDetail({
 }) {
   const { id } = await params;
   const recipeCustomization = await getRecipeCustomization(id);
-  console.log(recipeCustomization);
+  console.log(recipeCustomization.recipe);
+
+  const metrics: MetricItem[] = [
+    {
+      icon: CalorieIcon,
+      value: `${Number(
+        recipeCustomization.recipe.calories
+      ).toLocaleString()}Kcal`,
+    },
+    { icon: TimeIcon, value: `${recipeCustomization.recipe.cooking_time}min` },
+  ];
+
+  function MetricDisplay({ icon: Icon, value }: MetricItem) {
+    return (
+      <div className="flex items-center gap-px">
+        <Icon className="w-4 h-4 text-sub" />
+        <span className="text-xs font-medium">{value}</span>
+      </div>
+    );
+  }
 
   return (
     <div className="px-4 py-8 min-h-full h-fit flex flex-col gap-12">
@@ -53,9 +80,14 @@ export default async function MenuDetail({
                 {recipeCustomization.recipe.base_price}~
               </p>
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground leading-6">
               {recipeCustomization.recipe.description}
             </p>
+            <div className="flex gap-2">
+              {metrics.map((metric, index) => (
+                <MetricDisplay key={index} {...metric} />
+              ))}
+            </div>
           </div>
         </div>
         <MenuForm
