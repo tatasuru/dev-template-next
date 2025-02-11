@@ -12,4 +12,10 @@ export class OrderCreateResponseDto {
     description: '注文詳細',
   })
   order_details: string;
+
+  @ApiProperty()
+  createdAt: Date;
+
+  @ApiProperty()
+  updatedAt: Date;
 }
