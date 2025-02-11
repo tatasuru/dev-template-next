@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class OrderCreateDto {
+export class OrderCreateResponseDto {
   @ApiProperty({
     example: 0o12,
     description: 'オーダーID',
