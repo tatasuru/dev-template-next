@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
-import { CreateOrderDto } from './dto/create-order.dto';
+import { OrderCreateDto } from './dto/order-create.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 
 @Controller('orders')
@@ -16,7 +16,7 @@ export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Post()
-  create(@Body() createOrderDto: CreateOrderDto) {
+  create(@Body() createOrderDto: OrderCreateDto) {
     return this.ordersService.create(createOrderDto);
   }
 
