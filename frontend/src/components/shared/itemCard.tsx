@@ -18,11 +18,12 @@ type ItemCardProps = Readonly<{
   badge?: string;
   name: string;
   description: string;
-  price: number;
+  price?: number;
   calorie: number;
   time: number;
   href: Route;
   size: "large" | "small";
+  className?: string;
 }>;
 
 const LAYOUT_STYLES = {
@@ -34,7 +35,7 @@ const LAYOUT_STYLES = {
   },
   small: {
     container: "relative flex items-stretch",
-    header: "w-[110px] h-auto min-h-[110px] p-0 shrink-0 relative",
+    header: "max-w-[110px] w-2/5 h-auto min-h-[110px] p-0 shrink-0 relative",
     image: "!m-0 rounded-l-xl w-full h-full object-cover",
     content: "flex flex-col gap-2 p-3",
   },
@@ -47,10 +48,12 @@ type MetricItem = {
 
 function MetricDisplay({ icon: Icon, value }: MetricItem) {
   return (
-    <div className="flex items-center gap-px">
-      <Icon className="w-4 h-4 text-sub" />
-      <span className="text-xs font-medium">{value}</span>
-    </div>
+    value && (
+      <div className="flex items-center gap-px">
+        <Icon className="w-4 h-4 text-sub" />
+        <span className="text-xs font-medium">{value}</span>
+      </div>
+    )
   );
 }
 
@@ -64,17 +67,21 @@ export function ItemCard({
   time,
   href,
   size,
+  className,
 }: ItemCardProps) {
   const styles = LAYOUT_STYLES[size];
 
   const metrics: MetricItem[] = [
-    { icon: PriceIcon, value: `¥${Number(price).toLocaleString()}〜` },
+    {
+      icon: PriceIcon,
+      value: price ? `¥${Number(price).toLocaleString()}〜` : "",
+    },
     { icon: CalorieIcon, value: `${Number(calorie).toLocaleString()}Kcal` },
     { icon: TimeIcon, value: `${time}min` },
   ];
 
   return (
-    <Card className="shadow-none">
+    <Card className={"shadow-none" + (className ? ` ${className}` : "")}>
       <Link className={styles.container} href={href}>
         {badge && (
           <Badge className="absolute right-3 top-2 bg-sub text-white rounded-full z-10 shadow-none">

@@ -6,6 +6,9 @@ import type { StaticImageData } from "next/image";
 import { z } from "zod";
 import { Icon } from "@/components/shared/icon";
 import { useState, useEffect, useMemo } from "react";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
+import LoadingIcon from "~icons/line-md/loading-twotone-loop";
 
 import PlusIcon from "~icons/mdi/plus";
 import MinusIcon from "~icons/mdi/minus";
@@ -73,8 +76,27 @@ export function MenuForm(
     },
   });
 
+  const router = useRouter();
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
   function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
     console.log(values, totalPrice);
+
+    // write api request here
+    setTimeout(() => {
+      toast({
+        variant: "success",
+        title: "カートに追加しました",
+        description: "カートページにリダイレクトします",
+      });
+    }, 2000);
+
+    // Redirect to the next page
+    setTimeout(() => {
+      router.push("/cart");
+      setIsLoading(false);
+    }, 4000);
   }
 
   const breads = useMemo(
@@ -335,7 +357,11 @@ export function MenuForm(
               </p>
             </div>
             <Button variant={"main"} size={"lg"} type="submit">
-              カートに入れる
+              {isLoading ? (
+                <LoadingIcon className="!size-6 animate-spin" />
+              ) : (
+                "カートに入れる"
+              )}
             </Button>
           </div>
         </div>
