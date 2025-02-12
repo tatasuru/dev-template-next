@@ -94,8 +94,8 @@ export function MenuForm(
 
     // Redirect to the next page
     setTimeout(() => {
-      router.push("/cart");
       setIsLoading(false);
+      router.push("/cart");
     }, 4000);
   }
 

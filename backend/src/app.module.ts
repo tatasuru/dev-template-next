@@ -11,6 +11,7 @@ import { CustomizationOptionsModule } from './customization_options/customizatio
 import { OrdersModule } from './orders/orders.module';
 import { RecipeCustomizationsModule } from './recipe_customizations/recipe_customizations.module';
 import { OrderCustomizationsModule } from './order_customizations/order_customizations.module';
+import { CartsModule } from './carts/carts.module';
 
 @Module({
   // TODO: find env variables in ../../.env
@@ -25,6 +26,7 @@ import { OrderCustomizationsModule } from './order_customizations/order_customiz
     OrdersModule,
     RecipeCustomizationsModule,
     OrderCustomizationsModule,
+    CartsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
