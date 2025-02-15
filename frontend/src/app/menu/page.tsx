@@ -24,6 +24,7 @@ interface Recipe {
 }
 
 async function getRecipes() {
+  // TODO: dockerで立ち上げたサーバーにアクセスするためにhost.docker.internalを使う
   const res = await fetch("http://host.docker.internal:8000/recipes", {
     method: "GET",
     cache: "no-store",

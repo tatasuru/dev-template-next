@@ -21,6 +21,7 @@ import {
   ApiQuery,
   ApiBody,
 } from '@nestjs/swagger';
+import { Users } from './users.entity';
 
 @ApiTags('users')
 @Controller('users')
@@ -35,7 +36,7 @@ export class UsersController {
     type: UserResponseDto,
     isArray: true,
   })
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<Users[]> {
     return await this.UsersService.findAll();
   }
 
@@ -50,7 +51,7 @@ export class UsersController {
     status: 404,
     description: 'user情報が見つかりません',
   })
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<User> {
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Users> {
     return await this.UsersService.findOne(id);
   }
 
@@ -70,7 +71,7 @@ export class UsersController {
       gender: UserGender;
       birth_date: string;
     },
-  ): Promise<User> {
+  ): Promise<Users> {
     return await this.UsersService.create(userCreateDto);
   }
 }

@@ -10,31 +10,45 @@ import {
   HttpStatus,
   HttpException,
 } from '@nestjs/common';
-import { CustomizationOption } from './customization_options.model';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { CustomizationOptionsService } from './customization_options.service';
-import { CustomizationOptionResponseDto } from './dto/customization_options-response.dto';
-import { CustomizationOptionCreateDto } from './dto/customization_categories-create.dto';
-import { CustomizationOptionDeleteDto } from './dto/customization_options-delete.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { CustomizationOptions } from './customization_options.entity';
+import { CreateCustomizationOptionDto } from './dto/customization_categories-create.dto';
+import { UpdateCustomizationOptionDto } from './dto/customization_categories-update.dto';
 
-@ApiTags('customization_options')
-@Controller('customization_options')
+@ApiTags('customization-options')
+@Controller('customization-options')
 export class CustomizationOptionsController {
   constructor(
     private readonly customizationOptionsService: CustomizationOptionsService,
   ) {}
 
   @Get()
-  @ApiOperation({ summary: '全カテゴリー取得' })
+  @ApiOperation({ summary: 'カスタマイズオプション一覧取得' })
+  @ApiQuery({
+    name: 'categoryId',
+    required: false,
+    type: Number,
+    description: 'カテゴリーIDでフィルタリング',
+  })
   @ApiResponse({
     status: 200,
-    description: '全カテゴリー取得',
-    type: CustomizationOptionResponseDto,
-    isArray: true,
+    description: 'カスタマイズオプション一覧を取得しました',
+    type: [CustomizationOptions],
   })
-  async findAll(): Promise<CustomizationOption[]> {
+  async findAll(
+    @Query('categoryId') categoryId?: string,
+  ): Promise<CustomizationOptions[]> {
     try {
-      return await this.customizationOptionsService.findAll();
+      return await this.customizationOptionsService.findAll(
+        categoryId ? +categoryId : undefined,
+      );
     } catch (error) {
       throw new HttpException(
         error.message,
@@ -44,19 +58,19 @@ export class CustomizationOptionsController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: '指定されたIDのカテゴリーを取得' })
+  @ApiOperation({ summary: 'カスタマイズオプション詳細取得' })
   @ApiResponse({
     status: 200,
-    description: 'カテゴリー取得成功',
-    type: CustomizationOptionResponseDto,
+    description: 'カスタマイズオプションを取得しました',
+    type: CustomizationOptions,
   })
   @ApiResponse({
     status: 404,
-    description: 'カテゴリーが見つかりません',
+    description: 'カスタマイズオプションが見つかりません',
   })
-  async findOne(@Param('id') id: number): Promise<CustomizationOption> {
+  async findOne(@Param('id') id: string): Promise<CustomizationOptions> {
     try {
-      return await this.customizationOptionsService.findOne(id);
+      return await this.customizationOptionsService.findOne(+id);
     } catch (error) {
       throw new HttpException(
         error.message,
@@ -66,18 +80,18 @@ export class CustomizationOptionsController {
   }
 
   @Post()
-  @ApiOperation({ summary: 'カテゴリー登録' })
+  @ApiOperation({ summary: 'カスタマイズオプション作成' })
+  @ApiBody({ type: CreateCustomizationOptionDto })
   @ApiResponse({
     status: 201,
-    description: 'カテゴリーが正常に登録されました',
-    type: CustomizationOptionResponseDto,
+    description: 'カスタマイズオプションを作成しました',
+    type: CustomizationOptions,
   })
-  @ApiBody({ type: CustomizationOptionCreateDto })
   async create(
-    @Body() categoryCreateDto: CustomizationOptionCreateDto,
-  ): Promise<CustomizationOption> {
+    @Body() createDto: CreateCustomizationOptionDto,
+  ): Promise<CustomizationOptions> {
     try {
-      return await this.customizationOptionsService.create(categoryCreateDto);
+      return await this.customizationOptionsService.create(createDto);
     } catch (error) {
       throw new HttpException(
         error.message,
@@ -87,21 +101,54 @@ export class CustomizationOptionsController {
   }
 
   @Put(':id')
-  @ApiOperation({ summary: 'カテゴリー更新' })
+  @ApiOperation({ summary: 'カスタマイズオプション更新' })
+  @ApiBody({ type: UpdateCustomizationOptionDto })
   @ApiResponse({
     status: 200,
-    description: 'カテゴリーが正常に更新されました',
-    type: CustomizationOptionResponseDto,
+    description: 'カスタマイズオプションを更新しました',
+    type: CustomizationOptions,
   })
-  @ApiBody({ type: CustomizationOptionCreateDto })
   async update(
-    @Param('id') id: number,
-    @Body() customizationOptionCreateDto: CustomizationOptionCreateDto,
-  ): Promise<CustomizationOption> {
+    @Param('id') id: string,
+    @Body() updateDto: UpdateCustomizationOptionDto,
+  ): Promise<CustomizationOptions> {
     try {
-      return await this.customizationOptionsService.update(
-        id,
-        customizationOptionCreateDto as CustomizationOption,
+      return await this.customizationOptionsService.update(+id, updateDto);
+    } catch (error) {
+      throw new HttpException(
+        error.message,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Put('order/:categoryId')
+  @ApiOperation({ summary: 'カスタマイズオプションの表示順序更新' })
+  @ApiBody({
+    schema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'number' },
+          display_order: { type: 'number' },
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: '表示順序を更新しました',
+    type: [CustomizationOptions],
+  })
+  async updateOrder(
+    @Param('categoryId') categoryId: string,
+    @Body() orderUpdates: { id: number; display_order: number }[],
+  ): Promise<CustomizationOptions[]> {
+    try {
+      return await this.customizationOptionsService.updateOrder(
+        +categoryId,
+        orderUpdates,
       );
     } catch (error) {
       throw new HttpException(
@@ -112,23 +159,20 @@ export class CustomizationOptionsController {
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'カテゴリー削除' })
+  @ApiOperation({ summary: 'カスタマイズオプション削除' })
   @ApiResponse({
     status: 200,
-    description: 'カテゴリーが正常に削除されました',
+    description: 'カスタマイズオプションを削除しました',
     schema: {
       type: 'object',
       properties: {
-        message: {
-          type: 'string',
-          example: 'Category has been successfully deleted',
-        },
+        message: { type: 'string' },
       },
     },
   })
-  async delete(@Param('id') id: number): Promise<{ message: string }> {
+  async remove(@Param('id') id: string): Promise<{ message: string }> {
     try {
-      return await this.customizationOptionsService.delete(id);
+      return await this.customizationOptionsService.remove(+id);
     } catch (error) {
       throw new HttpException(
         error.message,

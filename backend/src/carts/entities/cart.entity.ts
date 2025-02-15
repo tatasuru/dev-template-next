@@ -6,10 +6,12 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
   ManyToMany,
   JoinTable,
 } from 'typeorm';
 import { Users } from '../../users/users.entity';
+import { CartItem } from '../../cart_items/entities/cart_item.entity';
 
 @Entity('carts')
 export class Carts {
@@ -19,12 +21,12 @@ export class Carts {
   @Column({ name: 'user_id' })
   user_id: number;
 
-  @ManyToOne(() => Users)
+  @ManyToOne(() => Users, (user) => user.carts)
   @JoinColumn({ name: 'user_id' })
   user: Users;
 
-  // @OneToMany(() => CartItem, (cartItem) => cartItem.cart)
-  // cartItems: CartItem[];
+  @OneToMany(() => CartItem, (cartItem) => cartItem.cart)
+  cartItems: CartItem[];
 
   @CreateDateColumn()
   createdAt: Date;

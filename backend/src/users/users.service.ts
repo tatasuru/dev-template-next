@@ -10,14 +10,14 @@ import { Users } from './users.entity';
 export class UsersService {
   constructor(
     @InjectRepository(Users)
-    private itemRepository: Repository<User>,
+    private itemRepository: Repository<Users>,
   ) {}
 
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<Users[]> {
     return await this.itemRepository.find();
   }
 
-  async findOne(id: number): Promise<User> {
+  async findOne(id: number): Promise<Users> {
     const found = await this.itemRepository.findOne({
       where: { id },
     });
@@ -34,7 +34,7 @@ export class UsersService {
     phone_number: string;
     gender: UserGender;
     birth_date: string;
-  }): Promise<User> {
+  }): Promise<Users> {
     const item = this.itemRepository.create({
       name: user.name,
       phone_number: user.phone_number,

@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { Categories } from '../categories/categories.entity';
 import { RecipeCustomizations } from '../recipe_customizations/entities/recipe_customization.entity';
+import { CartItem } from '../cart_items/entities/cart_item.entity';
 
 @Entity('recipes')
 export class Recipes {
@@ -29,6 +30,9 @@ export class Recipes {
     (recipeCustomization) => recipeCustomization.recipe,
   )
   recipe_customizations: RecipeCustomizations[];
+
+  @OneToMany(() => CartItem, (cartItem) => cartItem.recipe)
+  cartItems: CartItem[];
 
   @Column({ type: 'varchar', length: 255 })
   name: string;

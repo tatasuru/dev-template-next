@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateCustomizationOptionDto {
+export class UpdateCustomizationOptionDto {
   @ApiProperty({
     example: 1,
     description: 'カスタマイズカテゴリーID',

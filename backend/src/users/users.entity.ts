@@ -3,11 +3,13 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  OneToMany,
   UpdateDateColumn,
 } from 'typeorm';
 import { UserGender } from './user-gender.enum';
+import { Carts } from '../carts/entities/cart.entity';
 
-@Entity()
+@Entity('users')
 export class Users {
   @PrimaryGeneratedColumn()
   id: number;
@@ -27,6 +29,9 @@ export class Users {
 
   @Column({ type: 'text' })
   birth_date: string;
+
+  @OneToMany(() => Carts, (cart) => cart.user)
+  carts: Carts[];
 
   @CreateDateColumn()
   createdAt: Date;
