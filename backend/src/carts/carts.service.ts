@@ -35,6 +35,15 @@ export class CartsService {
     return found;
   }
 
+  async create(user_id: number): Promise<Carts> {
+    try {
+      const newCart = this.cartRepository.create({ user_id });
+      return await this.cartRepository.save(newCart);
+    } catch (error) {
+      throw new Error(`Failed to create cart: ${error.message}`);
+    }
+  }
+
   async delete(id: number): Promise<string> {
     try {
       await this.cartRepository.delete(id);

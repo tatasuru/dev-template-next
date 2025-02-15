@@ -30,6 +30,7 @@ interface Recipe {
   cooking_time: number;
   href: Route;
   size: "small" | "large";
+  is_sold_out: boolean;
 }
 
 export function MenuContents({ items }: { items: Recipe[] }) {
@@ -100,6 +101,7 @@ export function MenuContents({ items }: { items: Recipe[] }) {
             time={item.cooking_time}
             href={item.href}
             size={item.size}
+            is_sold_out={item.is_sold_out}
           />
         ))}
       </TabsContent>

@@ -12,6 +12,7 @@ import { Badge } from "@/components/shadcn-ui/badge";
 import PriceIcon from "~icons/solar/tag-price-bold";
 import CalorieIcon from "~icons/solar/fire-bold";
 import TimeIcon from "~icons/solar/clock-circle-bold";
+import { cn } from "@/utils/shadcn";
 
 type ItemCardProps = Readonly<{
   image_url: StaticImageData;
@@ -24,6 +25,7 @@ type ItemCardProps = Readonly<{
   href: Route;
   size: "large" | "small";
   className?: string;
+  is_sold_out?: boolean;
 }>;
 
 const LAYOUT_STYLES = {
@@ -68,6 +70,7 @@ export function ItemCard({
   href,
   size,
   className,
+  is_sold_out,
 }: ItemCardProps) {
   const styles = LAYOUT_STYLES[size];
 
@@ -81,10 +84,15 @@ export function ItemCard({
   ];
 
   return (
-    <Card className={"shadow-none" + (className ? ` ${className}` : "")}>
+    <Card className={cn("shadow-none", is_sold_out && "opacity-50", className)}>
       <Link className={styles.container} href={href}>
         {badge && (
-          <Badge className="absolute right-3 top-2 bg-sub text-white rounded-full z-10 shadow-none">
+          <Badge
+            className={cn(
+              "absolute right-3 top-2 bg-sub text-white rounded-full z-10 shadow-none",
+              is_sold_out && "bg-destructive"
+            )}
+          >
             {badge}
           </Badge>
         )}

@@ -33,13 +33,6 @@ export class CustomizationOptionsService {
       const customizationOptions =
         await this.customizationOptionsRepository.find(options);
 
-      if (!customizationOptions.length) {
-        const errorMessage = categoryId
-          ? `No customization options found for category ID "${categoryId}"`
-          : 'No customization options found';
-        throw new NotFoundException(errorMessage);
-      }
-
       return customizationOptions;
     } catch (error) {
       if (error instanceof NotFoundException) {

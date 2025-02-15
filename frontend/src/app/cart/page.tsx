@@ -36,6 +36,7 @@ export default function Cart() {
             href="/menu/3"
             size="small"
             className="border-none"
+            is_sold_out={false}
           />
           <div className="w-full flex flex-col">
             <Separator />

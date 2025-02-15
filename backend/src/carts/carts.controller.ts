@@ -66,6 +66,26 @@ export class CartsController {
     }
   }
 
+  @Post()
+  @ApiOperation({
+    summary: 'カート作成',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'カート作成',
+  })
+  @ApiBody({ type: Carts })
+  async create(@Body() createCartDto: Carts): Promise<Carts> {
+    try {
+      return await this.cartsService.create(createCartDto.user_id);
+    } catch (error) {
+      throw new HttpException(
+        error.message,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   @Delete(':id')
   @ApiOperation({
     summary: 'IDからカート削除',

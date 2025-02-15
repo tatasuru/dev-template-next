@@ -46,6 +46,7 @@ export function SetupForm() {
   const router = useRouter();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [userId, setUserId] = useState("");
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -62,25 +63,38 @@ export function SetupForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+    try {
+      setIsSubmitting(true);
 
-    setIsSubmitting(true);
+      const userInfo = await registerUserInfo(values);
+      setUserId(userInfo.id);
 
-    await registerUserInfo(values);
+      await createCartByUserId(userId);
 
-    // Show a success toast.
-    setTimeout(() => {
-      toast({
-        variant: "success",
-        title: "登録完了",
-        description: "HOMEへリダイレクトします。",
-      });
-    }, 2000);
+      // Show a success toast.
+      setTimeout(() => {
+        toast({
+          variant: "success",
+          title: "登録完了",
+          description: "HOMEへリダイレクトします。",
+        });
+      }, 2000);
 
-    // Redirect to the next page
-    setTimeout(() => {
-      router.push("/");
+      // Redirect to the next page
+      setTimeout(() => {
+        router.push("/");
+        setIsSubmitting(false);
+      }, 4000);
+    } catch (error) {
+      console.error(error);
       setIsSubmitting(false);
-    }, 4000);
+      deleteUserInfo(userId);
+      toast({
+        variant: "destructive",
+        title: "エラー",
+        description: "ユーザー情報の登録に失敗しました。",
+      });
+    }
   }
 
   async function registerUserInfo(body: z.infer<typeof formSchema>) {
@@ -91,6 +105,51 @@ export function SetupForm() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
+        cache: "no-store",
+        next: { revalidate: 0 },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Failed to create todo:", error);
+    }
+  }
+
+  async function deleteUserInfo(userId: string) {
+    try {
+      const response = await fetch(`http://localhost:8000/users/${userId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+        next: { revalidate: 0 },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Failed to create todo:", error);
+    }
+  }
+
+  async function createCartByUserId(userId: string) {
+    try {
+      const response = await fetch("http://localhost:8000/carts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userId),
         cache: "no-store",
         next: { revalidate: 0 },
       });

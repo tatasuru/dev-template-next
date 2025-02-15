@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, FindManyOptions } from 'typeorm';
 import { Recipe } from './recipes.model';
 import { Recipes } from './recipes.entity';
 import { RecipeCreateDto } from './dto/recipe-create.dto';
@@ -13,27 +13,56 @@ export class RecipesService {
     private itemRepository: Repository<Recipes>,
   ) {}
 
+  // async findAll(size?: number, category_id?: number): Promise<Recipes[]> {
+  //   const query = this.itemRepository
+  //     .createQueryBuilder('recipe')
+  //     .leftJoinAndSelect('recipe.category', 'category')
+  //     .leftJoinAndSelect(
+  //       'recipe.recipe_customizations',
+  //       'recipe_customizations',
+  //     )
+  //     .leftJoinAndSelect('recipe.cartItems', 'cartItems')
+  //     .orderBy('recipe.createdAt', 'DESC');
+
+  //   if (size && size > 0) {
+  //     query.take(size);
+  //   }
+
+  //   if (category_id) {
+  //     query.where('recipe.category_id = :category_id', { category_id });
+  //   }
+
+  //   const recipes = await query.getMany();
+
+  //   return recipes;
+  // }
   async findAll(size?: number, category_id?: number): Promise<Recipes[]> {
-    const query = this.itemRepository
-      .createQueryBuilder('recipe')
-      .leftJoinAndSelect('recipe.category', 'category')
-      .leftJoinAndSelect(
-        'recipe.recipe_customizations',
-        'recipe_customizations',
-      )
-      .leftJoinAndSelect('recipe.cartItems', 'cartItems')
-      .orderBy('recipe.createdAt', 'DESC');
+    const queryOptions: FindManyOptions<Recipes> = {
+      relations: {
+        category: true,
+        recipe_customizations: {
+          customization_categories: {
+            options: true,
+          },
+        },
+        cartItems: true,
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+    };
 
     if (size && size > 0) {
-      query.take(size);
+      queryOptions.take = size;
     }
 
     if (category_id) {
-      query.where('recipe.category_id = :category_id', { category_id });
+      queryOptions.where = {
+        category_id: category_id,
+      };
     }
 
-    const recipes = await query.getMany();
-
+    const recipes = await this.itemRepository.find(queryOptions);
     return recipes;
   }
 
@@ -42,7 +71,11 @@ export class RecipesService {
       where: { id },
       relations: {
         category: true,
-        recipe_customizations: true,
+        recipe_customizations: {
+          customization_categories: {
+            options: true,
+          },
+        },
         cartItems: true,
       },
     });
@@ -77,7 +110,11 @@ export class RecipesService {
         where: { id: savedRecipe.id },
         relations: {
           category: true,
-          recipe_customizations: true,
+          recipe_customizations: {
+            customization_categories: {
+              options: true,
+            },
+          },
           cartItems: true,
         },
       });
@@ -97,7 +134,11 @@ export class RecipesService {
       where: { id },
       relations: {
         category: true,
-        recipe_customizations: true,
+        recipe_customizations: {
+          customization_categories: {
+            options: true,
+          },
+        },
         cartItems: true,
       },
     });
@@ -115,7 +156,11 @@ export class RecipesService {
         where: { id },
         relations: {
           category: true,
-          recipe_customizations: true,
+          recipe_customizations: {
+            customization_categories: {
+              options: true,
+            },
+          },
           cartItems: true,
         },
       });

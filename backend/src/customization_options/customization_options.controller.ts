@@ -22,8 +22,8 @@ import { CustomizationOptions } from './customization_options.entity';
 import { CreateCustomizationOptionDto } from './dto/customization_categories-create.dto';
 import { UpdateCustomizationOptionDto } from './dto/customization_categories-update.dto';
 
-@ApiTags('customization-options')
-@Controller('customization-options')
+@ApiTags('customization_options')
+@Controller('customization_options')
 export class CustomizationOptionsController {
   constructor(
     private readonly customizationOptionsService: CustomizationOptionsService,

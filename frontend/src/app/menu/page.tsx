@@ -21,6 +21,7 @@ interface Recipe {
   cooking_time: number;
   href: Route;
   size: "small" | "large";
+  is_sold_out: boolean;
 }
 
 async function getRecipes() {
@@ -54,6 +55,7 @@ export default async function Menu() {
     cooking_time: recipe.cooking_time,
     href: `/menu/${recipe.id}` as Route<`/menu/${string}`>,
     size: "large" as const,
+    is_sold_out: recipe.is_sold_out,
   }));
 
   return (

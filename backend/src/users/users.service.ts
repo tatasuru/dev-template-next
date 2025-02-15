@@ -46,4 +46,13 @@ export class UsersService {
 
     return await this.itemRepository.save(item);
   }
+
+  async delete(id: number): Promise<string> {
+    try {
+      await this.itemRepository.delete(id);
+      return `User with ID "${id}" has been deleted`;
+    } catch (error) {
+      throw new Error(`Failed to delete user: ${error.message}`);
+    }
+  }
 }

@@ -74,4 +74,18 @@ export class UsersController {
   ): Promise<Users> {
     return await this.UsersService.create(userCreateDto);
   }
+
+  @Delete(':id')
+  @ApiOperation({ summary: '指定されたIDのuser情報を削除' })
+  @ApiResponse({
+    status: 200,
+    description: 'user情報削除',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'user情報が見つかりません',
+  })
+  async delete(@Param('id', ParseIntPipe) id: number): Promise<string> {
+    return await this.UsersService.delete(id);
+  }
 }
