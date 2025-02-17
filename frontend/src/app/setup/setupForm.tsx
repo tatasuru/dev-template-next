@@ -46,7 +46,6 @@ export function SetupForm() {
   const router = useRouter();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [userId, setUserId] = useState("");
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -63,11 +62,12 @@ export function SetupForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+    let userId = "";
     try {
       setIsSubmitting(true);
 
       const userInfo = await registerUserInfo(values);
-      setUserId(userInfo.id);
+      userId = userInfo.id;
 
       await createCartByUserId(userId);
 
@@ -149,7 +149,9 @@ export function SetupForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(userId),
+        body: JSON.stringify({
+          user_id: userId,
+        }),
         cache: "no-store",
         next: { revalidate: 0 },
       });

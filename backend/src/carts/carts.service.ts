@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, FindManyOptions } from 'typeorm';
 import { Carts } from './entities/cart.entity';
 
 @Injectable()
@@ -10,13 +10,20 @@ export class CartsService {
     private cartRepository: Repository<Carts>,
   ) {}
 
-  async findAll(): Promise<Carts[]> {
-    return await this.cartRepository.find({
+  async findAll(user_id: number): Promise<Carts[]> {
+    const queryOptions: FindManyOptions<Carts> = {
       relations: {
         user: true,
         cartItems: true,
       },
-    });
+    };
+
+    if (user_id) {
+      queryOptions.where = { user_id };
+    }
+
+    const carts = await this.cartRepository.find(queryOptions);
+    return carts;
   }
 
   async findOne(id: number): Promise<Carts> {

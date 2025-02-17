@@ -5,6 +5,7 @@ import {
   Body,
   Patch,
   Param,
+  Query,
   Delete,
   HttpStatus,
   HttpException,
@@ -28,13 +29,19 @@ export class CartsController {
   @ApiOperation({
     summary: '全カート取得',
   })
+  @ApiQuery({
+    name: 'user_id',
+    required: false,
+    type: Number,
+    description: 'ユーザーIDでフィルター',
+  })
   @ApiResponse({
     status: 200,
     description: '全カート取得',
   })
-  async findAll(): Promise<Carts[]> {
+  async findAll(@Query('user_id') user_id?: number): Promise<Carts[]> {
     try {
-      return await this.cartsService.findAll();
+      return await this.cartsService.findAll(user_id);
     } catch (error) {
       throw new HttpException(
         error.message,
