@@ -19,10 +19,10 @@ export class CartItemCustomization {
   id: number;
 
   @Column({ name: 'cart_item_id' })
-  cartItemId: number;
+  cart_item_id: number;
 
   @Column({ name: 'customization_option_id' })
-  customizationOptionId: number;
+  customization_option_id: number;
 
   @ManyToOne(() => CartItem, (cartItem) => cartItem.customizations)
   @JoinColumn({ name: 'cart_item_id' })

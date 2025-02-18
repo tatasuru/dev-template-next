@@ -14,7 +14,12 @@ export class CartsService {
     const queryOptions: FindManyOptions<Carts> = {
       relations: {
         user: true,
-        cartItems: true,
+        cartItems: {
+          recipe: true,
+          customizations: {
+            customizationOption: true,
+          },
+        },
       },
     };
 
@@ -31,7 +36,12 @@ export class CartsService {
       where: { id },
       relations: {
         user: true,
-        cartItems: true,
+        cartItems: {
+          recipe: true,
+          customizations: {
+            customizationOption: true,
+          },
+        },
       },
     });
 
