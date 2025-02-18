@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { UserGender } from './user-gender.enum';
 // import { v4 as uuid } from 'uuid';
 import { User } from './users.model';
+import { Carts } from '../carts/entities/cart.entity';
 import { Users } from './users.entity';
 
 @Injectable()
@@ -11,6 +12,8 @@ export class UsersService {
   constructor(
     @InjectRepository(Users)
     private itemRepository: Repository<Users>,
+    @InjectRepository(Carts)
+    private cartRepository: Repository<Carts>,
   ) {}
 
   async findAll(): Promise<Users[]> {
@@ -44,11 +47,33 @@ export class UsersService {
       updatedAt: new Date().toISOString(),
     });
 
-    return await this.itemRepository.save(item);
+    const users = await this.itemRepository.save(item);
+    const userId = users.id;
+
+    const found = await this.cartRepository.findOne({
+      where: { user_id: userId },
+    });
+
+    if (!found) {
+      return users;
+    } else {
+      const newCart = this.cartRepository.create({ user_id: userId });
+      await this.cartRepository.save(newCart);
+    }
+
+    return users;
   }
 
   async delete(id: number): Promise<string> {
     try {
+      const found = await this.cartRepository.findOne({
+        where: { user_id: id },
+      });
+
+      if (found) {
+        await this.cartRepository.delete(found.id);
+      }
+
       await this.itemRepository.delete(id);
       return `User with ID "${id}" has been deleted`;
     } catch (error) {
