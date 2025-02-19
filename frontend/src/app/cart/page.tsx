@@ -144,8 +144,13 @@ export default function Cart() {
               <span>1個</span>
             </p>
           </div>
-          <Button variant={"main"} size={"lg"} type="submit">
-            オーダーに進む
+          <Button size={"lg"} variant={"link"} className="w-full p-0">
+            <Link
+              href="/order"
+              className="flex items-center gap-2 justify-center bg-main text-white w-full px-8 h-10 rounded-md"
+            >
+              オーダーに進む
+            </Link>
           </Button>
         </div>
       </div>

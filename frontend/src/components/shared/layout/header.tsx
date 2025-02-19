@@ -24,7 +24,7 @@ export function Header() {
             </div>
           )}
 
-          {currentPath !== "/" && currentPath !== "/setup" && (
+          {currentPath !== "/" && currentPath !== "/setup" ? (
             <Button
               variant="main"
               size="icon"
@@ -33,6 +33,8 @@ export function Header() {
             >
               <LeftArrowIcon className="!size-8 text-white" />
             </Button>
+          ) : (
+            <div className="size-8"></div>
           )}
 
           {currentPath === "" && (
