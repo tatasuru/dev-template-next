@@ -7,6 +7,8 @@ services:
       - 3000:3000
     volumes:
       - ./frontend:/app
+    environment:
+      NEXT_PUBLIC_LIFF_ID: ${NEXT_PUBLIC_LIFF_ID}
 
   # Backend service
   backend:

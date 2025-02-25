@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -26,6 +27,8 @@ import { Calendar } from "@/components/shadcn-ui/calendar";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import LoadingIcon from "~icons/line-md/loading-twotone-loop";
+import { useLiff } from "@/components/shared/layout/liffProvider";
+import { Profile } from "@liff/get-profile";
 
 const formSchema = z.object({
   name: z
@@ -46,6 +49,17 @@ export function SetupForm() {
   const router = useRouter();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const { liff } = useLiff();
+
+  useEffect(() => {
+    if (liff?.isLoggedIn()) {
+      (async () => {
+        const profile = await liff.getProfile();
+        setProfile(profile);
+      })();
+    }
+  }, [liff]);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -169,6 +183,34 @@ export function SetupForm() {
 
   return (
     <Form {...form}>
+      {profile ? (
+        <div className="flex flex-col items-center space-y-4">
+          {profile.userId}
+          <br />
+          {profile.displayName}
+          <br />
+          {profile.pictureUrl}
+          <br />
+          {/* {profile.statusMessage} */}
+          {profile.pictureUrl && (
+            <Image
+              src={profile.pictureUrl}
+              alt="profile"
+              className="w-16 h-16 rounded-full"
+              width={64}
+              height={64}
+              unoptimized
+            />
+          )}
+        </div>
+      ) : (
+        <button
+          onClick={() => liff?.login()}
+          className="bg-blue-500 text-white px-4 py-2 mt-4 rounded-md hover:bg-blue-600"
+        >
+          login
+        </button>
+      )}
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}

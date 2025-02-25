@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/shared/layout/header";
 import { Footer } from "@/components/shared/layout/footer";
 import { Toaster } from "@/components/shadcn-ui/toaster";
+import { LiffProvider } from "@/components/shared/layout/liffProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,6 +26,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  console.log(process.env.NEXT_PUBLIC_LIFF_ID);
+
   return (
     <html lang="en">
       <body
@@ -34,7 +37,9 @@ export default function RootLayout({
           <div className="max-w-[550px] w-full h-fit">
             <Header />
             <div className="pt-[76px] min-h-screen w-full h-full">
-              {children}
+              <LiffProvider liffId={process.env.NEXT_PUBLIC_LIFF_ID || ""}>
+                {children}
+              </LiffProvider>
             </div>
             <Toaster />
             <Footer />
