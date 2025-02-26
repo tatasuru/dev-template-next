@@ -26,8 +26,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  console.log(process.env.NEXT_PUBLIC_LIFF_ID);
-
   return (
     <html lang="en">
       <body
@@ -35,14 +33,14 @@ export default function RootLayout({
       >
         <div className="flex items-center justify-center h-fit bg-white">
           <div className="max-w-[550px] w-full h-fit">
-            <Header />
-            <div className="pt-[76px] min-h-screen w-full h-full">
-              <LiffProvider liffId={process.env.NEXT_PUBLIC_LIFF_ID || ""}>
+            <LiffProvider liffId={process.env.NEXT_PUBLIC_LIFF_ID || ""}>
+              <Header />
+              <div className="pt-[76px] min-h-screen w-full h-full">
                 {children}
-              </LiffProvider>
-            </div>
-            <Toaster />
-            <Footer />
+              </div>
+              <Toaster />
+              <Footer />
+            </LiffProvider>
           </div>
         </div>
       </body>

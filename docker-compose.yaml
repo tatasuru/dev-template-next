@@ -10,6 +10,23 @@ services:
     environment:
       NEXT_PUBLIC_LIFF_ID: ${NEXT_PUBLIC_LIFF_ID}
 
+  # ngrok service
+  ngrok:
+    image: ngrok/ngrok:latest
+    restart: unless-stopped
+    command:
+      [
+        "http",
+        "--domain=comic-greatly-flamingo.ngrok-free.app",
+        "frontend-container:3000",
+      ]
+    ports:
+      - 4040:4040
+    depends_on:
+      - frontend
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTH_TOKEN}
+
   # Backend service
   backend:
     container_name: "backend-container"

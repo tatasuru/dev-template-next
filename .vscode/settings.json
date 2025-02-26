@@ -4,8 +4,10 @@
     "liff",
     "magnifer",
     "nestjs",
+    "ngrok",
     "pgadmin",
     "shadcn",
-    "sidemenu"
+    "sidemenu",
+    "wernight"
   ]
 }

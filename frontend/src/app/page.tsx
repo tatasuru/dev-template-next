@@ -69,17 +69,13 @@ const categories: {
 ];
 
 async function getRecipes() {
-  const res = await fetch(
-    "http://host.docker.internal:8000/recipes?size=3&category_id=1",
-    {
-      method: "GET",
-      cache: "no-store",
-
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const res = await fetch("http://backend:8000/recipes?size=3&category_id=1", {
+    method: "GET",
+    cache: "no-store",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
   if (!res.ok) {
     throw new Error(`Failed to fetch recipes: ${res.status}`);

@@ -11,7 +11,7 @@ type MetricItem = {
 
 async function getRecipeCustomization(id: string) {
   const res = await fetch(
-    `http://host.docker.internal:8000/recipe_customizations?recipe_id=${id}`,
+    `http://backend:8000/recipe_customizations?recipe_id=${id}`,
     {
       method: "GET",
       cache: "no-store",
