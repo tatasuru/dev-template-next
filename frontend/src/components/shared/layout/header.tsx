@@ -58,7 +58,7 @@ export function Header() {
       );
     }
 
-    if (currentPath !== "/setup") {
+    if (currentPath !== "/setup" && currentPath !== "/login") {
       return (
         <Button
           variant="main"
