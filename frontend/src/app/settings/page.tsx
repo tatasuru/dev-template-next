@@ -7,6 +7,7 @@ import { Button } from "@/components/shadcn-ui/button";
 import { Skeleton } from "@/components/shadcn-ui/skeleton";
 import { Separator } from "@/components/shadcn-ui/separator";
 import { useLiff } from "@/components/shared/layout/liffProvider";
+import { useRouter } from "next/navigation";
 
 type UserProfile = {
   userId: string;
@@ -46,48 +47,81 @@ const settingMenuItems = [
 export default function Settings() {
   const [userProfile, setUserProfile] = useState<UserProfile | undefined>();
   const { liff } = useLiff();
+  const [isMounted, setIsMounted] = useState(false);
   const [isLoading, setLoading] = useState(true);
+  const router = useRouter();
+
+  const logout = async () => {
+    try {
+      if (!liff) {
+        console.error("LIFF is not initialized");
+        return;
+      }
+
+      if (liff.isLoggedIn()) {
+        liff.logout();
+        console.log("Logout success");
+        router.push("/login");
+      } else {
+        console.log("Already logged out");
+        router.push("/login");
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
   useEffect(() => {
-    if (liff) {
+    if (isMounted && liff) {
       liff.getProfile().then((profile) => {
         setUserProfile(profile);
         setLoading(false);
       });
     }
-  }, [liff]);
+  }, [liff, isMounted]);
 
-  const ProfileComponent = !isLoading ? (
-    <div className="flex flex-col items-center gap-2">
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const ProfileComponent =
+    isMounted || !isLoading ? (
       <div className="flex flex-col items-center gap-2">
-        <div className="size-36 bg-muted-foreground rounded-full" />
-        <p>{userProfile?.displayName}</p>
+        <div className="flex flex-col items-center gap-2">
+          <Image
+            src={userProfile?.pictureUrl || "/icons/user.svg"}
+            alt="User profile"
+            width={144}
+            height={144}
+            className="rounded-full"
+          />
+          <p>{userProfile?.displayName}</p>
+        </div>
+        <Button
+          variant="link"
+          size="default"
+          onClick={() => console.log("Edit profile")}
+          className="text-main"
+        >
+          編集する
+        </Button>
       </div>
-      <Button
-        variant="link"
-        size="default"
-        onClick={() => console.log("Edit profile")}
-        className="text-main"
-      >
-        編集する
-      </Button>
-    </div>
-  ) : (
-    <div className="flex flex-col items-center gap-2">
+    ) : (
       <div className="flex flex-col items-center gap-2">
-        <Skeleton className="w-36 h-36 rounded-full" />
-        <Skeleton className="w-36 h-6" />
+        <div className="flex flex-col items-center gap-2">
+          <Skeleton className="w-36 h-36 rounded-full" />
+          <Skeleton className="w-36 h-6" />
+        </div>
+        <Button
+          variant="link"
+          size="default"
+          onClick={() => console.log("Edit profile")}
+          className="text-main"
+        >
+          編集する
+        </Button>
       </div>
-      <Button
-        variant="link"
-        size="default"
-        onClick={() => console.log("Edit profile")}
-        className="text-main"
-      >
-        編集する
-      </Button>
-    </div>
-  );
+    );
 
   const rightIcon = (
     <svg
@@ -99,9 +133,9 @@ export default function Settings() {
       <path
         fill="none"
         stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
         d="m9 5l6 7l-6 7"
       />
     </svg>
@@ -141,7 +175,7 @@ export default function Settings() {
           variant="ghost"
           size="default"
           className="text-destructive"
-          onClick={() => console.log("Logout")}
+          onClick={() => logout()}
         >
           <Image src="/icons/logout.svg" alt="Logout" width={28} height={28} />
           ログアウト
