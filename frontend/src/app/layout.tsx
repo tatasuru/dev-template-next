@@ -5,6 +5,7 @@ import { Header } from "@/components/shared/layout/header";
 import { Footer } from "@/components/shared/layout/footer";
 import { Toaster } from "@/components/shadcn-ui/toaster";
 import { LiffProvider } from "@/components/shared/layout/liffProvider";
+import { Loading } from "@/components/shared/loading";
 import StoreProvider from "@/app/StoreProvider";
 
 const geistSans = Geist({
@@ -36,6 +37,7 @@ export default function RootLayout({
           <div className="max-w-[550px] w-full h-fit">
             <StoreProvider>
               <LiffProvider liffId={process.env.NEXT_PUBLIC_LIFF_ID || ""}>
+                <Loading />
                 <Header />
                 <div className="pt-[76px] min-h-screen w-full h-full">
                   {children}
