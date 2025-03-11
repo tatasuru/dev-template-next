@@ -38,6 +38,7 @@ interface Recipe {
   cooking_time: number;
   href: Route;
   size: "small" | "large";
+  is_sold_out: boolean;
 }
 
 const categories: {
@@ -68,17 +69,13 @@ const categories: {
 ];
 
 async function getRecipes() {
-  const res = await fetch(
-    "http://host.docker.internal:8000/recipes?size=3&category_id=1",
-    {
-      method: "GET",
-      cache: "no-store",
-
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const res = await fetch("http://backend:8000/recipes?size=3&category_id=1", {
+    method: "GET",
+    cache: "no-store",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
   if (!res.ok) {
     throw new Error(`Failed to fetch recipes: ${res.status}`);
@@ -101,6 +98,7 @@ export default async function Home() {
     cooking_time: recipe.cooking_time,
     href: `/menu/${recipe.id}` as Route<`/menu/${string}`>,
     size: "small" as const,
+    is_sold_out: recipe.is_sold_out,
   }));
 
   return (
@@ -158,6 +156,7 @@ export default async function Home() {
               time={item.cooking_time}
               href={item.href}
               size={item.size}
+              is_sold_out={item.is_sold_out}
             />
           ))}
         </div>

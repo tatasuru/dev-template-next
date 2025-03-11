@@ -1,4 +1,4 @@
-import { Category } from 'src/categories/categories.model';
+import { Category } from '../categories/categories.model';
 export interface Recipe {
   id: number;
   category_id: number;

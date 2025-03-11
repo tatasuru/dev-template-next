@@ -11,7 +11,7 @@ import { useEffect } from "react";
 
 const NAV_ITEMS = [
   {
-    href: "/setup",
+    href: "/settings",
     icon: UserIcon,
     transform: "translate-x-[calc(100%+1rem)]",
   },

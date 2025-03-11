@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, FindManyOptions } from 'typeorm';
 import { Recipe } from './recipes.model';
 import { Recipes } from './recipes.entity';
 import { RecipeCreateDto } from './dto/recipe-create.dto';
@@ -10,34 +10,74 @@ import { RecipeUpdateDto } from './dto/recipe-update.dto';
 export class RecipesService {
   constructor(
     @InjectRepository(Recipes)
-    private itemRepository: Repository<Recipe>,
+    private itemRepository: Repository<Recipes>,
   ) {}
 
-  async findAll(size?: number, category_id?: number): Promise<Recipe[]> {
-    const query = this.itemRepository
-      .createQueryBuilder('recipe')
-      .leftJoinAndSelect('recipe.category', 'category')
-      .leftJoinAndSelect(
-        'recipe.recipe_customizations',
-        'recipe_customizations',
-      )
-      .orderBy('recipe.createdAt', 'DESC');
+  // async findAll(size?: number, category_id?: number): Promise<Recipes[]> {
+  //   const query = this.itemRepository
+  //     .createQueryBuilder('recipe')
+  //     .leftJoinAndSelect('recipe.category', 'category')
+  //     .leftJoinAndSelect(
+  //       'recipe.recipe_customizations',
+  //       'recipe_customizations',
+  //     )
+  //     .leftJoinAndSelect('recipe.cartItems', 'cartItems')
+  //     .orderBy('recipe.createdAt', 'DESC');
+
+  //   if (size && size > 0) {
+  //     query.take(size);
+  //   }
+
+  //   if (category_id) {
+  //     query.where('recipe.category_id = :category_id', { category_id });
+  //   }
+
+  //   const recipes = await query.getMany();
+
+  //   return recipes;
+  // }
+  async findAll(size?: number, category_id?: number): Promise<Recipes[]> {
+    const queryOptions: FindManyOptions<Recipes> = {
+      relations: {
+        category: true,
+        recipe_customizations: {
+          customization_categories: {
+            options: true,
+          },
+        },
+        cartItems: true,
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+    };
 
     if (size && size > 0) {
-      query.take(size);
+      queryOptions.take = size;
     }
 
     if (category_id) {
-      query.where('recipe.category_id = :category_id', { category_id });
+      queryOptions.where = {
+        category_id: category_id,
+      };
     }
 
-    return await query.getMany();
+    const recipes = await this.itemRepository.find(queryOptions);
+    return recipes;
   }
 
-  async findOne(id: number): Promise<Recipe> {
+  async findOne(id: number): Promise<Recipes> {
     const found = await this.itemRepository.findOne({
       where: { id },
-      relations: ['category', 'recipe_customizations'],
+      relations: {
+        category: true,
+        recipe_customizations: {
+          customization_categories: {
+            options: true,
+          },
+        },
+        cartItems: true,
+      },
     });
 
     if (!found) {
@@ -47,7 +87,7 @@ export class RecipesService {
     return found;
   }
 
-  async create(recipe: RecipeCreateDto): Promise<Recipe> {
+  async create(recipe: RecipeCreateDto): Promise<Recipes> {
     try {
       const newRecipe = this.itemRepository.create({
         name: recipe.name,
@@ -68,7 +108,15 @@ export class RecipesService {
       // return savedRecipe;
       return await this.itemRepository.findOne({
         where: { id: savedRecipe.id },
-        relations: ['category', 'recipe_customizations'],
+        relations: {
+          category: true,
+          recipe_customizations: {
+            customization_categories: {
+              options: true,
+            },
+          },
+          cartItems: true,
+        },
       });
     } catch (error) {
       // error code 23503 is a foreign key violation
@@ -81,10 +129,18 @@ export class RecipesService {
     }
   }
 
-  async update(id: number, recipe: RecipeUpdateDto): Promise<Recipe> {
+  async update(id: number, recipe: RecipeUpdateDto): Promise<Recipes> {
     const found = await this.itemRepository.findOne({
       where: { id },
-      relations: ['category', 'recipe_customizations'],
+      relations: {
+        category: true,
+        recipe_customizations: {
+          customization_categories: {
+            options: true,
+          },
+        },
+        cartItems: true,
+      },
     });
 
     if (!found) {
@@ -98,7 +154,15 @@ export class RecipesService {
       await this.itemRepository.save(updatedRecipe);
       return await this.itemRepository.findOne({
         where: { id },
-        relations: ['category', 'recipe_customizations'],
+        relations: {
+          category: true,
+          recipe_customizations: {
+            customization_categories: {
+              options: true,
+            },
+          },
+          cartItems: true,
+        },
       });
     } catch (error) {
       if (error.code === '23503') {

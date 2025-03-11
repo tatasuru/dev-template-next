@@ -3,7 +3,7 @@ import {
   Get,
   Post,
   Body,
-  Patch,
+  Put,
   Param,
   Delete,
   HttpStatus,
@@ -99,6 +99,33 @@ export class RecipeCustomizationsController {
   ): Promise<RecipeCustomizations> {
     try {
       return await this.recipeCustomizationsService.create(recipeCustomization);
+    } catch (error) {
+      throw new HttpException(
+        error.message,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Put(':id')
+  @ApiOperation({ summary: 'レシピカスタマイズ更新' })
+  @ApiResponse({
+    status: 200,
+    description: 'レシピカスタマイズ更新成功',
+    type: RecipeCustomizationResponseDto,
+  })
+  @ApiBody({ type: RecipeCustomizationResponseDto })
+  async update(
+    @Param('id') id: number,
+    @Body() recipeCustomization: CreateRecipeCustomizationDto,
+  ): Promise<RecipeCustomizations> {
+    try {
+      console.log('id', id);
+      console.log('recipeCustomization', recipeCustomization);
+      return await this.recipeCustomizationsService.update(
+        id,
+        recipeCustomization,
+      );
     } catch (error) {
       throw new HttpException(
         error.message,

@@ -10,7 +10,7 @@ import {
   HttpStatus,
   HttpException,
 } from '@nestjs/common';
-import { Recipe } from './recipes.model';
+import { Recipes } from './recipes.entity';
 import { RecipesService } from './recipes.service';
 import { RecipeCreateDto } from './dto/recipe-create.dto';
 import { RecipeUpdateDto } from './dto/recipe-update.dto';
@@ -51,7 +51,7 @@ export class RecipesController {
   async findAll(
     @Query('size') size?: number,
     @Query('category_id') category_id?: number,
-  ): Promise<Recipe[]> {
+  ): Promise<Recipes[]> {
     try {
       return await this.recipesService.findAll(size, category_id);
     } catch (error) {
@@ -73,7 +73,7 @@ export class RecipesController {
     status: 404,
     description: 'レシピが見つかりません',
   })
-  async findOne(@Param('id') id: number): Promise<Recipe> {
+  async findOne(@Param('id') id: number): Promise<Recipes> {
     try {
       return await this.recipesService.findOne(id);
     } catch (error) {
@@ -95,7 +95,7 @@ export class RecipesController {
   async update(
     @Param('id') id: number,
     @Body() updateRecipeDto: RecipeUpdateDto,
-  ): Promise<Recipe> {
+  ): Promise<Recipes> {
     try {
       return await this.recipesService.update(id, updateRecipeDto);
     } catch (error) {
@@ -114,7 +114,7 @@ export class RecipesController {
     type: RecipeResponseDto,
   })
   @ApiBody({ type: RecipeCreateDto })
-  async create(@Body() createRecipeDto: RecipeCreateDto): Promise<Recipe> {
+  async create(@Body() createRecipeDto: RecipeCreateDto): Promise<Recipes> {
     try {
       return await this.recipesService.create(createRecipeDto);
     } catch (error) {

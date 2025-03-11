@@ -16,9 +16,12 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "http://localhost:8000/:path*",
+        destination: "http://backend-container:8000/:path*",
       },
     ];
+  },
+  images: {
+    domains: ["profile.line-scdn.net"], // LINE のプロフィール画像ドメインを許可リストに追加
   },
 };
 

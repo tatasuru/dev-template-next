@@ -7,6 +7,31 @@ services:
       - 3000:3000
     volumes:
       - ./frontend:/app
+    environment:
+      NEXT_PUBLIC_LIFF_ID: ${NEXT_PUBLIC_LIFF_ID}
+    networks:
+      - app-network
+
+  # ngrok service
+  ngrok:
+    image: ngrok/ngrok:latest
+    restart: unless-stopped
+    command:
+      [
+        "http",
+        "--domain=comic-greatly-flamingo.ngrok-free.app",
+        "frontend-container:3000",
+        "--log=stdout",
+        "--log-level=debug",
+      ]
+    ports:
+      - 4040:4040
+    depends_on:
+      - frontend
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
+    networks:
+      - app-network
 
   # Backend service
   backend:
@@ -18,6 +43,8 @@ services:
       - ./backend:/app
     environment:
       TZ: Asia/Tokyo
+    networks:
+      - app-network
 
   # Database service
   db:
@@ -33,6 +60,8 @@ services:
       TZ: "Asia/Tokyo"
     ports:
       - "5433:5432"
+    networks:
+      - app-network
 
   # Database GUI service
   db-gui:
@@ -50,8 +79,15 @@ services:
       PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
     ports:
       - "8080:80"
+    networks:
+      - app-network
 
 # Volumes
 volumes:
   postgres_data:
   pgadmin-data:
+
+# Networks
+networks:
+  app-network:
+    driver: bridge

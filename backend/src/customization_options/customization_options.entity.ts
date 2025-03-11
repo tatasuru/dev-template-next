@@ -9,6 +9,7 @@ import {
   Index,
   OneToMany,
 } from 'typeorm';
+import { CartItemCustomization } from '../cart_item_customizations/entities/cart_item_customization.entity';
 import { CustomizationCategories } from '../customization_categories/customization_categories.entity';
 import { OrderCustomizations } from '../order_customizations/entities/order_customization.entity';
 
@@ -25,6 +26,12 @@ export class CustomizationOptions {
     (orderCustomization) => orderCustomization.customization_option,
   )
   order_customizations: OrderCustomizations[];
+
+  @OneToMany(
+    () => CartItemCustomization,
+    (customization) => customization.customizationOption,
+  )
+  cartItemCustomizations: CartItemCustomization[];
 
   @ManyToOne(
     () => CustomizationCategories,

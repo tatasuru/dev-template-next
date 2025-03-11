@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateOrderCustomizationDto } from './dto/create-order_customization.dto';
 import { UpdateOrderCustomizationDto } from './dto/update-order_customization.dto';
-import { OrderCustomizations } from 'src/order_customizations/entities/order_customization.entity';
-import { OrderCustomization } from 'src/order_customizations/order_customizations.model';
+import { OrderCustomizations } from '../order_customizations/entities/order_customization.entity';
+import { OrderCustomization } from '../order_customizations/order_customizations.model';
 
 @Injectable()
 export class OrderCustomizationsService {

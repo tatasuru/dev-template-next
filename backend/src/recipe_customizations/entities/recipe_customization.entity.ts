@@ -32,10 +32,10 @@ export class RecipeCustomizations {
   })
   customization_category_ids: number[];
 
-  @ManyToMany(() => CustomizationCategories, {
-    eager: true,
-    cascade: true,
-  })
+  @ManyToMany(
+    () => CustomizationCategories,
+    (category) => category.recipe_customizations,
+  )
   @JoinTable({
     name: 'recipe_customization_categories',
     joinColumn: {
