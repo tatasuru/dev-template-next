@@ -3,18 +3,25 @@ services:
   frontend:
     container_name: "frontend-container"
     build: ./frontend
+    platform: linux/arm64
     ports:
       - 3000:3000
     volumes:
-      - ./frontend:/app
+      - ./frontend:/app:cached
     environment:
       NEXT_PUBLIC_LIFF_ID: ${NEXT_PUBLIC_LIFF_ID}
     networks:
       - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
 
   # ngrok service
   ngrok:
     image: ngrok/ngrok:latest
+    platform: linux/arm64
     restart: unless-stopped
     command:
       [
@@ -32,24 +39,36 @@ services:
       NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
     networks:
       - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
 
   # Backend service
   backend:
     container_name: "backend-container"
     build: ./backend
+    platform: linux/arm64
     ports:
       - 8000:8000
     volumes:
-      - ./backend:/app
+      - ./backend:/app:cached
     environment:
       TZ: Asia/Tokyo
     networks:
       - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
 
   # Database service
   db:
     container_name: db-container
     image: postgres:16
+    platform: linux/arm64
     restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -62,11 +81,17 @@ services:
       - "5433:5432"
     networks:
       - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
 
   # Database GUI service
   db-gui:
     container_name: db-gui-container
     image: dpage/pgadmin4:8.14
+    platform: linux/arm64
     volumes:
       - pgadmin-data:/var/lib/pgadmin
       - ./config/servers.json:/pgadmin4/servers.json
@@ -81,6 +106,11 @@ services:
       - "8080:80"
     networks:
       - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
 
 # Volumes
 volumes:
