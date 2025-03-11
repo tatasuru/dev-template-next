@@ -18,7 +18,10 @@ async function bootstrap() {
 
   // for CORS
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: [
+      'http://localhost:3000',
+      'https://comic-greatly-flamingo.ngrok-free.app',
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type'],
     credentials: true,

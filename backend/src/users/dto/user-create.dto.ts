@@ -26,4 +26,10 @@ export class UserCreateDto {
     description: 'ユーザーの生年月日',
   })
   birth_date: string;
+
+  @ApiProperty({
+    example: 'liff_user_id',
+    description: 'LIFFのユーザーID',
+  })
+  liff_user_id: string;
 }

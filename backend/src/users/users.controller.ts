@@ -55,6 +55,23 @@ export class UsersController {
     return await this.UsersService.findOne(id);
   }
 
+  @Get('liff/:liff_user_id')
+  @ApiOperation({ summary: '指定されたLIFF User IDのuser情報を取得' })
+  @ApiResponse({
+    status: 200,
+    description: 'user情報取得成功',
+    type: UserResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'user情報が見つかりません',
+  })
+  async findOneByLiffUserId(
+    @Param('liff_user_id') liffUserId: string,
+  ): Promise<Users> {
+    return await this.UsersService.findOneByLiffUserId(liffUserId);
+  }
+
   @Post()
   @ApiOperation({ summary: 'user情報登録' })
   @ApiResponse({
