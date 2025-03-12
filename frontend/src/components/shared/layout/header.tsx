@@ -119,20 +119,20 @@ export function Header() {
           console.log("User ID set:", userId);
           setTimeout(() => {
             dispatch(setLoading(false));
-          }, 1000);
+          }, 2000);
         })
         .catch((err) => {
           console.error("Error getting profile:", err);
           setTimeout(() => {
             dispatch(setLoading(false));
-          }, 1000);
+          }, 2000);
         });
     } else {
       console.log("Not logged in");
       router.push("/login");
       setTimeout(() => {
         dispatch(setLoading(false));
-      }, 1000);
+      }, 2000);
     }
   }, [liff, dispatch, router]);
 

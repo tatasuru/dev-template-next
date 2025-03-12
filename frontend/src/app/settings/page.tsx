@@ -73,10 +73,18 @@ export default function Settings() {
 
   useEffect(() => {
     if (isMounted && liff) {
-      liff.getProfile().then((profile) => {
-        setUserProfile(profile);
-        setLoading(false);
-      });
+      console.log("Fetching user profile");
+      liff
+        .getProfile()
+        .then((profile) => {
+          setUserProfile(profile);
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoading(false);
+        });
+    } else {
+      return;
     }
   }, [liff, isMounted]);
 
@@ -89,13 +97,13 @@ export default function Settings() {
       <div className="flex flex-col items-center gap-2">
         <div className="flex flex-col items-center gap-2">
           <Image
-            src={userProfile?.pictureUrl || "/icons/user.svg"}
+            src={userProfile?.pictureUrl || "/icons/help.svg"}
             alt="User profile"
             width={144}
             height={144}
             className="rounded-full"
           />
-          <p>{userProfile?.displayName}</p>
+          <p>{userProfile ? userProfile?.displayName : "unknown"}</p>
         </div>
         <Button
           variant="link"
@@ -103,7 +111,7 @@ export default function Settings() {
           onClick={() => console.log("Edit profile")}
           className="text-main"
         >
-          編集する
+          <Link href="/setup">編集する</Link>
         </Button>
       </div>
     ) : (
