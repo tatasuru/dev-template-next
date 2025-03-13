@@ -23,6 +23,10 @@ const nextConfig: NextConfig = {
   images: {
     domains: ["profile.line-scdn.net"], // LINE のプロフィール画像ドメインを許可リストに追加
   },
+  devIndicators: {
+    buildActivity: false,
+    appIsrStatus: false,
+  },
 };
 
 export default nextConfig;

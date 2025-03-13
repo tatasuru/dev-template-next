@@ -32,17 +32,33 @@ export class UsersService {
     return found;
   }
 
+  async findOneByLiffUserId(liffUserId: string): Promise<Users> {
+    const found = await this.itemRepository.findOne({
+      where: { liff_user_id: liffUserId },
+    });
+
+    if (!found) {
+      throw new NotFoundException(
+        `User with LIFF User ID "${liffUserId}" not found`,
+      );
+    }
+
+    return found;
+  }
+
   async create(user: {
     name: string;
     phone_number: string;
     gender: UserGender;
     birth_date: string;
+    liff_user_id: string;
   }): Promise<Users> {
     const item = this.itemRepository.create({
       name: user.name,
       phone_number: user.phone_number,
       gender: user.gender,
       birth_date: user.birth_date,
+      liff_user_id: user.liff_user_id,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });

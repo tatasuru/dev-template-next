@@ -33,6 +33,9 @@ export class Users {
   @OneToMany(() => Carts, (cart) => cart.user)
   carts: Carts[];
 
+  @Column({ type: 'text', nullable: true })
+  liff_user_id: string;
+
   @CreateDateColumn()
   createdAt: Date;
 

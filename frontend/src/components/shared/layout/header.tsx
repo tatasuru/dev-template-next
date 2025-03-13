@@ -7,9 +7,9 @@ import SearchIcon from "~icons/solar/magnifer-linear";
 import { useRouter, usePathname } from "next/navigation";
 import { Button } from "@/components/shadcn-ui/button";
 import { useLiff } from "@/components/shared/layout/liffProvider";
-// import { useAppSelector } from "@/lib/hooks";
 import { useAppDispatch } from "@/lib/hooks";
 import { setUserId } from "@/lib/slice/userSlice";
+import { setLoading } from "@/lib/slice/loadingSlice";
 import { useEffect } from "react";
 
 export function Header() {
@@ -18,7 +18,6 @@ export function Header() {
   const currentPathName = currentPath.split("/")[1];
   const { liff } = useLiff();
 
-  // const userId = useAppSelector((state) => state.user.id);
   const dispatch = useAppDispatch();
 
   const handleLogout = async () => {
@@ -118,14 +117,24 @@ export function Header() {
           const userId = profile.userId;
           dispatch(setUserId(Number(userId)));
           console.log("User ID set:", userId);
+          setTimeout(() => {
+            dispatch(setLoading(false));
+          }, 2000);
         })
         .catch((err) => {
           console.error("Error getting profile:", err);
+          setTimeout(() => {
+            dispatch(setLoading(false));
+          }, 2000);
         });
     } else {
       console.log("Not logged in");
+      router.push("/login");
+      setTimeout(() => {
+        dispatch(setLoading(false));
+      }, 2000);
     }
-  }, [liff, dispatch]);
+  }, [liff, dispatch, router]);
 
   return (
     <div className="bg-main p-4 w-full fixed top-0 left-0 right-0 z-50 min-h-[76px] flex items-center">
